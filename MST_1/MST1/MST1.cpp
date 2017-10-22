@@ -11,7 +11,7 @@ int main()
 	string line;
 
 	int vertex_count, link_count;
-	IOSwitcher.getline(line);
+	IOSwitcher.get_line(line);
 	if (sscanf_s(line.c_str(), "%d %d", &vertex_count, &link_count) != 2)
 	{
 		cerr << "read n m was wrong!";
@@ -20,7 +20,7 @@ int main()
 
 	int count = 0;
 	int v1, v2, l;
-	while (count < link_count && IOSwitcher.getline(line))  //input from the file in.txt
+	while (count < link_count && IOSwitcher.get_line(line))  //input from the file in.txt
 	{
 		if (sscanf(line.c_str(), "%d %d %d", &v1, &v2, &l) != 3)
 		{
