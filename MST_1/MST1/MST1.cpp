@@ -12,19 +12,19 @@ int main()
 
 	string line;
 
-	int vertex_count, link_count;
+	int vertex_count, edge_count;
 	IOSwitcher.getline(line);
-	if (sscanf(line.c_str(), "%d %d", &vertex_count, &link_count) != 2)
+	if (sscanf(line.c_str(), "%d %d", &vertex_count, &edge_count) != 2)
 	{
 		cerr << "read first line was wrong!";
 		return 1;
 	}
 
-	CMSTSolver solver(vertex_count, link_count);
+	CMSTSolver solver(vertex_count, edge_count);
 
 	int count = 0;
 	int v1, v2, l;
-	while (count < link_count && IOSwitcher.getline(line))  //input from the file in.txt
+	while (count < edge_count && IOSwitcher.getline(line))  //input from the file in.txt
 	{
 		if (sscanf(line.c_str(), "%d %d %d", &v1, &v2, &l) != 3)
 		{
@@ -32,12 +32,14 @@ int main()
 			return 1;
 		}
 
-		solver.add_edge(v1, v2, l);
+		solver.add_edge(count, v1, v2, l);
 
 		count++;
 	}
 
-	cout << count;
+	int res = solver.solve();
+
+	cout << res;
 
     return 0;
 }

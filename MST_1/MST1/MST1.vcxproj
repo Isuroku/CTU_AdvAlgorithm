@@ -26,6 +26,7 @@
   <ItemGroup>
     <ClInclude Include="Edge.h" />
     <ClInclude Include="IOSwitcher.h" />
+    <ClInclude Include="LPriority.h" />
     <ClInclude Include="MainHeader.h" />
     <ClInclude Include="MSTSolver.h" />
     <ClInclude Include="Vertex.h" />

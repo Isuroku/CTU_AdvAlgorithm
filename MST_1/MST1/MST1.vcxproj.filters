@@ -11,5 +11,6 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="MSTSolver.h" />
+    <ClInclude Include="LPriority.h" />
   </ItemGroup>
 </Project>
