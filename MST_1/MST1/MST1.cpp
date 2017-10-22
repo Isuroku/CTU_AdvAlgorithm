@@ -7,7 +7,7 @@
 
 int main()
 {
-	CIOSwitcher IOSwitcher(true, "Pd/pub01.in");
+	CIOSwitcher IOSwitcher(false, "Pd/pub01.in");
 
 	string line;
 
