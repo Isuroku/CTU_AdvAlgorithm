@@ -22,7 +22,7 @@ int main()
 	int v1, v2, l;
 	while (count < link_count && IOSwitcher.getline(line))  //input from the file in.txt
 	{
-		if (sscanf_s(line.c_str(), "%d %d %d", &v1, &v2, &l) != 3)
+		if (sscanf(line.c_str(), "%d %d %d", &v1, &v2, &l) != 3)
 		{
 			cerr << "read n m was wrong!";
 			return 1;

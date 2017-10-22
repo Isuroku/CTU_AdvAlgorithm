@@ -11,9 +11,10 @@ CIOSwitcher::CIOSwitcher(const bool inFromFile, const string inFileName): _from_
 		_pfile_stream = &cin;
 }
 
-bool CIOSwitcher::getline(string& out_string) const
+bool CIOSwitcher::getline(string& out_string)
 {
-	return ::getline(*_pfile_stream, out_string).good();
+	::getline(*_pfile_stream, out_string);
+	return !_pfile_stream->eof();
 }
 
 

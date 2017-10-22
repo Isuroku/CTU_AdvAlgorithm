@@ -7,7 +7,7 @@ public:
 	CIOSwitcher(bool inFromFile, const string inFileName);
 	~CIOSwitcher();
 
-	bool CIOSwitcher::getline(string& out_string) const;
+	bool CIOSwitcher::getline(string& out_string);
 
 private:
 	bool _from_file;
