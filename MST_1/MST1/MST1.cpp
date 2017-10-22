@@ -13,7 +13,7 @@ int main()
 
 	int vertex_count, link_count;
 	IOSwitcher.getline(line);
-	if (sscanf_s(line.c_str(), "%d %d", &vertex_count, &link_count) != 2)
+	if (sscanf(line.c_str(), "%d %d", &vertex_count, &link_count) != 2)
 	{
 		cerr << "read n m was wrong!";
 		return 1;
