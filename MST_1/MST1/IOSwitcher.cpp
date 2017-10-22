@@ -22,17 +22,17 @@ bool CIOSwitcher::getline(string& out_string) const
 	out_string.assign(tmp);
 
 	//::getline(*_pfile_stream, &tmp);
-	return !_pfile_stream->eof();
+	return _pfile_stream->good();
 }
 
 
 CIOSwitcher::~CIOSwitcher()
 {
-	if (_from_file)
-	{
-		ifstream* fs = static_cast<ifstream*>(_pfile_stream);
-		if (fs->is_open())
-			fs->close();
-		delete(_pfile_stream);
-	}
+	if (!_from_file)
+		return;
+	
+	ifstream* fs = static_cast<ifstream*>(_pfile_stream);
+	if (fs->is_open())
+		fs->close();
+	delete(_pfile_stream);
 }

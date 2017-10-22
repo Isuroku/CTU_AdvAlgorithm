@@ -15,7 +15,7 @@ int main()
 	IOSwitcher.getline(line);
 	if (sscanf(line.c_str(), "%d %d", &vertex_count, &link_count) != 2)
 	{
-		cerr << "read n m was wrong!";
+		cerr << "read first line was wrong!";
 		return 1;
 	}
 
@@ -25,7 +25,7 @@ int main()
 	{
 		if (sscanf(line.c_str(), "%d %d %d", &v1, &v2, &l) != 3)
 		{
-			cerr << "read n m was wrong!";
+			cerr << "read line " << count << " was wrong!";
 			return 1;
 		}
 		count++;
