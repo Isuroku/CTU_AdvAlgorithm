@@ -3,11 +3,12 @@
 #include <string>
 #include <stdio.h>
 #include "IOSwitcher.h"
+#include "MSTSolver.h"
 
 
 int main()
 {
-	CIOSwitcher IOSwitcher(false, "Pd/pub01.in");
+	CIOSwitcher IOSwitcher(true, "Pd/pub01.in");
 
 	string line;
 
@@ -19,6 +20,8 @@ int main()
 		return 1;
 	}
 
+	CMSTSolver solver(vertex_count, link_count);
+
 	int count = 0;
 	int v1, v2, l;
 	while (count < link_count && IOSwitcher.getline(line))  //input from the file in.txt
@@ -28,6 +31,9 @@ int main()
 			cerr << "read line " << count << " was wrong!";
 			return 1;
 		}
+
+		solver.add_edge(v1, v2, l);
+
 		count++;
 	}
 

@@ -3,9 +3,13 @@
   <ItemGroup>
     <ClCompile Include="IOSwitcher.cpp" />
     <ClCompile Include="MST1.cpp" />
+    <ClCompile Include="MSTSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOSwitcher.h" />
     <ClInclude Include="MainHeader.h" />
+    <ClInclude Include="Edge.h" />
+    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="MSTSolver.h" />
   </ItemGroup>
 </Project>

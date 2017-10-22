@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <memory>
+#include <cstring>
 
 
 CIOSwitcher::CIOSwitcher(const bool inFromFile, const string inFileName): _from_file(inFromFile)
