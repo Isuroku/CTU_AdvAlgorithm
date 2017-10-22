@@ -19,7 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\MST1.cpp" />
+    <ClCompile Include="IOSwitcher.cpp" />
+    <ClCompile Include="MST1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IOSwitcher.h" />
+    <ClInclude Include="MainHeader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
