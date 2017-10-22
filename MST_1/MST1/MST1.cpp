@@ -1,6 +1,7 @@
 
 #include "MainHeader.h"
 #include <string>
+#include <stdio.h>
 #include "IOSwitcher.h"
 
 

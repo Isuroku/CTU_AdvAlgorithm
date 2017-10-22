@@ -1,6 +1,7 @@
 #include "IOSwitcher.h"
 #include <fstream>
 #include <string>
+#include <stdio.h>
 
 
 CIOSwitcher::CIOSwitcher(const bool inFromFile, const string inFileName): _from_file(inFromFile)
