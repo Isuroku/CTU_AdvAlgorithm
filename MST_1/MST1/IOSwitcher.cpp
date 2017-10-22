@@ -14,7 +14,7 @@ CIOSwitcher::CIOSwitcher(const bool inFromFile, const string inFileName): _from_
 bool CIOSwitcher::getline(string& out_string) const
 {
 	char tmp[128];
-	memset(&tmp, 0, sizeof tmp);
+	memset(&tmp, 0, sizeof(tmp));
 	_pfile_stream->getline(tmp, 128);
 
 	out_string.assign(tmp);
