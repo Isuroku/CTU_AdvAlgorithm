@@ -31,6 +31,8 @@
 *.out
 *.app
 
+!pub*.out
+
 ipch/
 obj/
 .vs/
