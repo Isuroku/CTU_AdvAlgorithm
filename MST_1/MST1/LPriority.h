@@ -2,13 +2,15 @@
 #define LPRIORITY_H
 
 #include <sstream>
-#include <limits>
+//#include <limits>
+
+const int max_int = 2147483647;
 
 class CLPriority
 {
 public:
 
-	CLPriority(): _length(0), _priority(0), _result(INT_MAX) {}
+	CLPriority(): _length(0), _priority(0), _result(max_int) {}
 	//CLPriority(const int length) : _length(length), _priority(0) {}
 	//CLPriority(const int length, const int priority) : _length(length), _priority(priority) {}
 
