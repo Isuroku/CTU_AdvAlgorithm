@@ -21,8 +21,6 @@ CMSTSolver::CMSTSolver(const int v_count, const int e_count): _v_count(v_count),
 	_vertices.resize(_v_count);
 	for (size_t i = 0; i < _vertices.size(); ++i)
 		_vertices[i].Init(i + 1);
-
-	_m[2] = 13;
 }
 
 CMSTSolver::~CMSTSolver()
@@ -46,7 +44,7 @@ void CMSTSolver::create_tbls(vector<CLPriority>& out_vec)
 	out_vec.resize(_len_priority_tbls.size());
 
 	int i = 0;
-	for (map< int, int, greater<int> >::iterator it = _len_priority_tbls.begin(); it != _len_priority_tbls.end(); ++it)
+	for (unordered_map<int, int>::iterator it = _len_priority_tbls.begin(); it != _len_priority_tbls.end(); ++it)
 	{
 		int len = it->first;
 		int pr = it->second;
