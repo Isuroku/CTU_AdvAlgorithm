@@ -159,26 +159,23 @@ bool CMSTSolver::solve_pass(const int in_max_length, vector<CLPriority>& io_vecP
 			if (frag_len_less_max)
 			{
 				frag_p->set_frag_length(last_res);
-				frag_p->set_frag_rank(frag_p->get_frag_rank() + frag_c->get_frag_rank());
+				frag_p->inc_rank();
 				frag_c->set_parent(frag_p);
 			}
 		}
-		else
+		else if (io_vecPriorities[0].length() == edge->length() && !edge->is_bad())
 		{
-			if (io_vecPriorities[0].length() == edge->length() && !edge->is_bad())
-			{
-				CLPriority curr_best_priority = io_vecPriorities[0];
+			CLPriority curr_best_priority = io_vecPriorities[0];
 
-				edge->set_bad(true);
+			edge->set_bad(true);
 
-				io_vecPriorities.erase(io_vecPriorities.begin());
+			io_vecPriorities.erase(io_vecPriorities.begin());
 
-				curr_best_priority.set_priority(curr_best_priority.priority() - 1);
-				const vector<CLPriority>::iterator new_place = lower_bound(io_vecPriorities.begin(), io_vecPriorities.end(), curr_best_priority, lpriorcomp());
-				io_vecPriorities.insert(new_place, curr_best_priority);
+			curr_best_priority.set_priority(curr_best_priority.priority() - 1);
+			const vector<CLPriority>::iterator new_place = lower_bound(io_vecPriorities.begin(), io_vecPriorities.end(), curr_best_priority, lpriorcomp());
+			io_vecPriorities.insert(new_place, curr_best_priority);
 
-				good = io_vecPriorities.begin()->length() == curr_best_priority.length();
-			}
+			good = io_vecPriorities.begin()->length() == curr_best_priority.length();
 		}
 	}
 

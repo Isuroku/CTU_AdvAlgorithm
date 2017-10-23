@@ -50,37 +50,27 @@ public:
 		if (_parent == NULL)
 			return this;
 
-		return _parent->get_frag();
+		CVertex* frag = _parent->get_frag();
+
+		if (frag != _parent)
+			_parent = frag;
+
+		return frag;
 	}
 
 	void set_parent(CVertex* parent)
 	{
-		if (_parent != NULL)
-		{
-			cerr << "error set_parent: already have parent!" << endl;
-			return;
-		}
 		_parent = parent;
 	}
 
 	void set_frag_length(const int frag_length)
 	{
-		if (_parent != NULL)
-		{
-			cerr << "error set_frag_length: vertex has parent!" << endl;
-			return;
-		}
 		_frag_length = frag_length;
 	}
 
-	void set_frag_rank(const int frag_rank)
+	void inc_rank()
 	{
-		if (_parent != NULL)
-		{
-			cerr << "error set_frag_rank: vertex has parent!" << endl;
-			return;
-		}
-		_frag_rank = frag_rank;
+		_frag_rank++;
 	}
 
 	void reset()
