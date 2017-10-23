@@ -2,6 +2,7 @@
 #define LPRIORITY_H
 
 #include <sstream>
+#include <limits>
 
 class CLPriority
 {
