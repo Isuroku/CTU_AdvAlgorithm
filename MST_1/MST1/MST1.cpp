@@ -8,18 +8,22 @@
 const string arr_file_names[] = 
 {
 	"Pd/pub01.in",
+	"Pd/pub02.in",
 	"Pd/pub09.in",
+	"Pd/pub10.in",
 };
 
 const int arr_file_res[] =
 {
 	15,
+	7,
 	1600933,
+	797967939
 };
 
 int main()
 {
-	const int test_n = 1;
+	const int test_n = 3;
 	CIOSwitcher IOSwitcher(false, arr_file_names[test_n]);
 
 	string line;

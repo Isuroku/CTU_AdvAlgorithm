@@ -6,7 +6,7 @@ class CVertex;
 class CEdge
 {
 public:
-	CEdge() : _length(0), _bad(false)
+	CEdge() : _length(0)
 	{
 		_v[0] = NULL;
 		_v[1] = NULL;
@@ -16,7 +16,6 @@ public:
 	{
 		_v[0] = v1;
 		_v[1] = v2;
-		_bad = false;
 	}
 
 	void init(CVertex* v1, CVertex* v2, const int length)
@@ -24,16 +23,12 @@ public:
 		_length = length;
 		_v[0] = v1;
 		_v[1] = v2;
-		_bad = false;
 	}
 
 	int length() const { return _length; }
 	int priority() const { return _priority; }
 
-	bool is_bad() const { return _bad; }
-
 	void set_priority(const int value) { _priority = value; }
-	void set_bad(const bool value) { _bad = value; }
 
 	string name() const 
 	{ 
@@ -49,7 +44,5 @@ private:
 
 	int _length;
 	int _priority;
-
-	bool _bad;
 };
 

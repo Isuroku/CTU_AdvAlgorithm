@@ -4,6 +4,7 @@
     <ClCompile Include="IOSwitcher.cpp" />
     <ClCompile Include="MST1.cpp" />
     <ClCompile Include="MSTSolver.cpp" />
+    <ClCompile Include="DFS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOSwitcher.h" />
@@ -12,5 +13,7 @@
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="MSTSolver.h" />
     <ClInclude Include="LPriority.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="DFS.h" />
   </ItemGroup>
 </Project>

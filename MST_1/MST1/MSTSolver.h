@@ -19,17 +19,16 @@ public:
 	int solve();
 
 private:
-	int _v_count;
-	int _e_count;
-
-	//CVertex** _vertices;
 	vector<CEdge> _edges;
 	vector<CVertex> _vertices;
 	vector<CEdge*> _heap_edges;
 
-	unordered_map<int, int> _len_priority_tbls;
+	vector<CLPriority*> _vec_priorities;
 
-	void create_tbls(vector<CLPriority>& out_vec);
-	bool solve_pass(int max_length, vector<CLPriority>& in_vecPriorities);
+	unordered_map<int, CLPriority*> _len_priority_tbls;
+	unordered_map< int, vector<CEdge*> > _len_edges_tbls;
+
+	void solve_pass(int max_length, CLPriority* ioPriority);
+	void insert_priority_to_table(CLPriority* pr);
 };
 
