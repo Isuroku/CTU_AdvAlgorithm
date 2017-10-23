@@ -21,6 +21,8 @@ CMSTSolver::CMSTSolver(const int v_count, const int e_count): _v_count(v_count),
 	_vertices.resize(_v_count);
 	for (size_t i = 0; i < _vertices.size(); ++i)
 		_vertices[i].Init(i + 1);
+
+	_m[2] = 13;
 }
 
 CMSTSolver::~CMSTSolver()

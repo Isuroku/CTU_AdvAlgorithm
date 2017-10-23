@@ -3,6 +3,7 @@
 #include <map>
 #include <functional>
 #include "LPriority.h"
+#include <unordered_map>
 
 class CVertex;
 class CEdge;
@@ -26,6 +27,7 @@ private:
 	vector<CVertex> _vertices;
 	vector<CEdge*> _heap_edges;
 
+	unordered_map <int, int> _m;
 	map< int, int, greater<int> > _len_priority_tbls;
 
 	void create_tbls(vector<CLPriority>& out_vec);
