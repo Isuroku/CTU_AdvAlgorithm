@@ -13,6 +13,11 @@
 CMSTSolver::CMSTSolver(const int v_count, const int e_count): _v_count(v_count), _e_count(e_count)
 {
 	_edges.resize(e_count);
+	_heap_edges.reserve(e_count);
+
+	for (size_t i = 0; i < _edges.size(); ++i)
+		_heap_edges.push_back(&_edges[i]);
+
 	_vertices.resize(_v_count);
 	for (size_t i = 0; i < _vertices.size(); ++i)
 		_vertices[i].Init(i + 1);
@@ -68,8 +73,8 @@ struct SEdgeComp
 		const int pr_rhs = rhs->length() == _best_length && !rhs->is_bad() ? 1 : 0;
 
 		if(pr_lhs == pr_rhs)
-			return lhs->length() > rhs->length(); 
-		return pr_lhs < pr_rhs;
+			return lhs->length() < rhs->length(); 
+		return pr_lhs > pr_rhs;
 	}
 };
 
@@ -108,17 +113,9 @@ int CMSTSolver::solve()
 
 bool CMSTSolver::solve_pass(const int in_max_length, vector<CLPriority>& io_vecPriorities)
 {
-	vector<CEdge*> heap;
-	heap.reserve(_edges.size());
-
 	const SEdgeComp edge_comp(io_vecPriorities[0].length());
-
-	for (vector<CEdge>::iterator it = _edges.begin(); it != _edges.end(); ++it)
-	{
-		CEdge* edge = &(*it);
-		const vector<CEdge*>::iterator place_it = lower_bound(heap.begin(), heap.end(), edge, edge_comp);
-		heap.insert(place_it, edge);
-	}
+	
+	sort(_heap_edges.begin(), _heap_edges.end(), edge_comp);
 
 	size_t f_cout = _vertices.size();
 
@@ -126,14 +123,13 @@ bool CMSTSolver::solve_pass(const int in_max_length, vector<CLPriority>& io_vecP
 
 	bool good = true;
 	bool frag_len_less_max = true;
-
 	int last_res = 0;
+	size_t edge_index = 0;
 
-	while (f_cout > 1 && frag_len_less_max && good && !heap.empty())
+	while (f_cout > 1 && frag_len_less_max && good && edge_index < _heap_edges.size())
 	{
-		const vector<CEdge*>::iterator last = --heap.end();
-		CEdge* edge = *last;
-		heap.erase(last);
+		CEdge* edge = _heap_edges[edge_index];
+		edge_index++;
 
 		CVertex* frag_l = edge->get_vertex(true)->get_frag();
 		CVertex* frag_r = edge->get_vertex(false)->get_frag();

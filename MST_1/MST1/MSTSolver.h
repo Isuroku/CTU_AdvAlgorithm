@@ -24,6 +24,7 @@ private:
 	//CVertex** _vertices;
 	vector<CEdge> _edges;
 	vector<CVertex> _vertices;
+	vector<CEdge*> _heap_edges;
 
 	map< int, int, greater<int> > _len_priority_tbls;
 

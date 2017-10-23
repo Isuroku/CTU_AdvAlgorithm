@@ -5,10 +5,22 @@
 #include "IOSwitcher.h"
 #include "MSTSolver.h"
 
+const string arr_file_names[] = 
+{
+	"Pd/pub01.in",
+	"Pd/pub09.in",
+};
+
+const int arr_file_res[] =
+{
+	15,
+	1600933,
+};
 
 int main()
 {
-	CIOSwitcher IOSwitcher(true, "Pd/pub10.in");
+	const int test_n = 1;
+	CIOSwitcher IOSwitcher(false, arr_file_names[test_n]);
 
 	string line;
 
@@ -38,6 +50,9 @@ int main()
 	}
 
 	int res = solver.solve();
+	
+	int check = arr_file_res[test_n];
+	bool done = check == res;
 
 	cout << res;
 
