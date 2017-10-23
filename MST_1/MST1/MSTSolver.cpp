@@ -12,57 +12,26 @@
 
 CMSTSolver::CMSTSolver(const int v_count, const int e_count): _v_count(v_count), _e_count(e_count)
 {
-	_vertices = new CVertex*[_v_count];
-	memset(_vertices, 0, _v_count * sizeof(CVertex*));
 	_edges.resize(e_count);
+	_vertices.resize(_v_count);
+	for (size_t i = 0; i < _vertices.size(); ++i)
+		_vertices[i].Init(i + 1);
 }
-
 
 CMSTSolver::~CMSTSolver()
 {
-	for (int i = 0; i < _v_count; i++)
-		safe_delete(_vertices[i]);
-	safe_delete(_vertices);
-
+	_vertices.clear();
 	_edges.clear();
-
-	for (map< int, vector<int>*, greater<int> >::iterator it = _priority_len_tbls.begin(); it != _priority_len_tbls.end(); ++it)
-		safe_delete(it->second);
 }
 
 void CMSTSolver::add_edge(const int index, const int vid1, const int vid2, const int length)
 {
-	CVertex* pv1 = get_vertex(vid1 - 1);
-	CVertex* pv2 = get_vertex(vid2 - 1);
+	CVertex* pv1 = &_vertices[vid1 - 1];
+	CVertex* pv2 = &_vertices[vid2 - 1];
 	_edges[index].init(pv1, pv2, length);
 
-	int pr = _len_priority_tbls[length] + 1;
+	const int pr = _len_priority_tbls[length] + 1;
 	_len_priority_tbls[length] = pr;
-}
-
-CVertex* CMSTSolver::get_vertex(const int vid) const
-{
-	CVertex* pv = _vertices[vid];
-	if (!pv)
-	{
-		pv = new CVertex(vid);
-		_vertices[vid] = pv;
-	}
-	return pv;
-}
-
-vector<int>* CMSTSolver::set_len_by_pr(int len, int pr)
-{
-	vector<int>* lens = _priority_len_tbls[pr];
-	if (lens == NULL)
-	{
-		lens = new vector<int>();
-		_priority_len_tbls[pr] = lens;
-	}
-	const vector<int>::iterator place_it = lower_bound(lens->begin(), lens->end(), len);
-	lens->insert(place_it, len);
-
-	return lens;
 }
 
 void CMSTSolver::create_tbls(vector<CLPriority>& out_vec)
@@ -77,32 +46,13 @@ void CMSTSolver::create_tbls(vector<CLPriority>& out_vec)
 
 		out_vec[i].set_values(len, pr);
 		i++;
-
-		cerr << len << ": " << pr << endl;
-		if (pr > 1)
-			set_len_by_pr(len, pr);
 	}
 
 	sort(out_vec.begin(), out_vec.end(), lpriorcomp());
 
-	cerr << "PriorityVec: " << endl;
+	/*cerr << "PriorityVec: " << endl;
 	for (vector<CLPriority>::iterator it = out_vec.begin(); it != out_vec.end(); ++it)
 		cerr << it->name() << "; ";
-	cerr << endl;
-
-	/*cerr << "PriorityTbl: " << endl;
-	for (map< int, vector<int>*, greater<int> >::iterator it = _priority_len_tbls.begin(); it != _priority_len_tbls.end(); ++it)
-	{
-		cerr << "p: " << it->first << ", len: ";
-
-		if (it->second == NULL)
-			cerr << "1";
-		else
-		{
-			for (vector<int>::iterator itq = it->second->begin(); itq != it->second->end(); ++itq)
-				cerr << *itq << ", ";
-		}
-	}
 	cerr << endl;*/
 }
 
@@ -114,8 +64,8 @@ struct SEdgeComp
 
 	bool operator() (const CEdge* lhs, const CEdge* rhs) const	
 	{
-		const int pr_lhs = lhs->length() == _best_length ? 1 : 0;
-		const int pr_rhs = rhs->length() == _best_length ? 1 : 0;
+		const int pr_lhs = lhs->length() == _best_length && !lhs->is_bad() ? 1 : 0;
+		const int pr_rhs = rhs->length() == _best_length && !rhs->is_bad() ? 1 : 0;
 
 		if(pr_lhs == pr_rhs)
 			return lhs->length() > rhs->length(); 
@@ -129,114 +79,115 @@ int CMSTSolver::solve()
 
 	create_tbls(vec_prs);
 
-	bool passed;
-	int tree_len;
+	bool passed = true;
+	CLPriority best_passed;
+	
 	do
 	{
-		passed = solve_pass(vec_prs, tree_len);
+		if (!passed)
+		{
+			for (int i = 0; i < _v_count; i++)
+				_vertices[i].reset();
+		}
+
+		passed = solve_pass(best_passed.result(), vec_prs);
+		if(passed)
+		{
+			CLPriority passed_pr = vec_prs[0];
+			vec_prs.erase(vec_prs.begin());
+
+			if (best_passed.result() > passed_pr.result())
+				best_passed = passed_pr;
+
+			passed = best_passed.priority() > vec_prs.begin()->priority();
+		}
 	} while (!passed);
 
-	return tree_len;
+	return best_passed.result();
 }
 
-bool CMSTSolver::solve_pass(vector<CLPriority>& in_vecPriorities, int& out_tree_len)
+bool CMSTSolver::solve_pass(const int in_max_length, vector<CLPriority>& io_vecPriorities)
 {
 	vector<CEdge*> heap;
 	heap.reserve(_edges.size());
 
-	CLPriority& curr_best_priority = in_vecPriorities[0];
-	const SEdgeComp edge_comp(curr_best_priority.length());
-
-	//priority_queue<CEdge*, vector<CEdge*>, edgecomp> edge_queue;
+	const SEdgeComp edge_comp(io_vecPriorities[0].length());
 
 	for (vector<CEdge>::iterator it = _edges.begin(); it != _edges.end(); ++it)
 	{
 		CEdge* edge = &(*it);
-
-		if (!edge->is_bad())
-		{
-			const vector<CEdge*>::iterator place_it = lower_bound(heap.begin(), heap.end(), edge, edge_comp);
-			heap.insert(place_it, edge);
-
-			/*(*it)->set_priority(_len_priority_tbls[(*it)->length()]);
-			edge_queue.push(*it);*/
-		}
+		const vector<CEdge*>::iterator place_it = lower_bound(heap.begin(), heap.end(), edge, edge_comp);
+		heap.insert(place_it, edge);
 	}
 
-	/*cerr << "sort edges: "  << endl;
-	while (!edge_queue.empty())
-	{
-		CEdge* edge = edge_queue.top();
-		cerr << edge->name() << endl;
-		edge_queue.pop();
-	}
-	cerr << endl;*/
+	size_t f_cout = _vertices.size();
 
-	int f_cout = _v_count;
-
-	map<int, int> f_len;
+	//map<int, int> f_len;
 
 	bool good = true;
+	bool frag_len_less_max = true;
 
-	while (f_cout > 1 && good && !heap.empty())
+	int last_res = 0;
+
+	while (f_cout > 1 && frag_len_less_max && good && !heap.empty())
 	{
-		vector<CEdge*>::iterator last = --heap.end();
+		const vector<CEdge*>::iterator last = --heap.end();
 		CEdge* edge = *last;
 		heap.erase(last);
-		//edge_queue.pop();
 
-		int fid_l = edge->get_vertex(true)->get_fid();
-		int fid_r = edge->get_vertex(false)->get_fid();
+		CVertex* frag_l = edge->get_vertex(true)->get_frag();
+		CVertex* frag_r = edge->get_vertex(false)->get_frag();
 
-		if (fid_l != fid_r)
+		if (frag_l != frag_r)
 		{
 			f_cout--;
 
-			edge->get_vertex(false)->set_parent(edge->get_vertex(true)->get_frag());
-			
-			f_len[fid_l] = f_len[fid_l] + f_len[fid_r] + edge->length();
+			CVertex* frag_p;
+			CVertex* frag_c;
+
+			if (frag_l->get_frag_rank() > frag_r->get_frag_rank())
+			{
+				frag_p = frag_l;
+				frag_c = frag_r;
+			}
+			else
+			{
+				frag_p = frag_r;
+				frag_c = frag_l;
+			}
+
+			last_res = frag_p->get_frag_length() + frag_c->get_frag_length() + edge->length();
+
+			frag_len_less_max = last_res < in_max_length;
+
+			if (frag_len_less_max)
+			{
+				frag_p->set_frag_length(last_res);
+				frag_p->set_frag_rank(frag_p->get_frag_rank() + frag_c->get_frag_rank());
+				frag_c->set_parent(frag_p);
+			}
 		}
 		else
 		{
-			if (best_len == edge->length())
+			if (io_vecPriorities[0].length() == edge->length() && !edge->is_bad())
 			{
-				vector<CLPriority>::iterator pr_it_fail = in_vecPriorities.begin();
-				CLPriority lpr_fail = *pr_it_fail;
-				in_vecPriorities.erase(pr_it_fail);
+				CLPriority curr_best_priority = io_vecPriorities[0];
 
-				lpr_fail.set_priority(lpr_fail.priority() - 1);
-				pr_it_fail = lower_bound(in_vecPriorities.begin(), in_vecPriorities.end(), lpr_fail, lpriorcomp());
-				in_vecPriorities.insert(pr_it_fail, lpr_fail);
+				edge->set_bad(true);
 
-				good = pr_it_fail == in_vecPriorities.begin();
+				io_vecPriorities.erase(io_vecPriorities.begin());
+
+				curr_best_priority.set_priority(curr_best_priority.priority() - 1);
+				const vector<CLPriority>::iterator new_place = lower_bound(io_vecPriorities.begin(), io_vecPriorities.end(), curr_best_priority, lpriorcomp());
+				io_vecPriorities.insert(new_place, curr_best_priority);
+
+				good = io_vecPriorities.begin()->length() == curr_best_priority.length();
 			}
-			/*edge->set_bad(true);
-
-			int edge_len = edge->length();
-			const int old_pr = _len_priority_tbls[edge_len];
-			const int new_pr = old_pr - 1;
-			_len_priority_tbls[edge_len] = new_pr;
-
-			if (old_pr > 1)
-			{
-				vector<int>* old_lens = _priority_len_tbls[old_pr];
-
-				const vector<int>::iterator next_len_it = old_lens->erase(old_lens->begin());
-
-				vector<int>* new_lens = set_len_by_pr(edge_len, new_pr);
-
-				good = next_len_it == old_lens->end() && new_lens->at(0) == edge_len;
-			}*/
 		}
 	}
 
-	if(good)
-		out_tree_len = f_len[_vertices[0]->get_fid()];
-	else
-	{
-		for (int i = 0; i < _v_count; i++)
-			_vertices[i]->reset_fid();
-	}
+	if (good)
+		io_vecPriorities[0].set_result(last_res);
 
 	return good;
 }

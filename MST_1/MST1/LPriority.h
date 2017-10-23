@@ -3,26 +3,21 @@
 
 #include <sstream>
 
-class CEdge;
-
 class CLPriority
 {
 public:
 
-	CLPriority(): _length(0), _priority(0) {}
-	CLPriority(const int length) : _length(length), _priority(0) {}
-	CLPriority(const int length, const int priority) : _length(length), _priority(priority) {}
+	CLPriority(): _length(0), _priority(0), _result(INT_MAX) {}
+	//CLPriority(const int length) : _length(length), _priority(0) {}
+	//CLPriority(const int length, const int priority) : _length(length), _priority(priority) {}
 
 	int length() const { return _length; }
 	int priority() const { return _priority; }
 	int result() const { return _result; }
-	CEdge* bad_edge() const { return _bad_edge; }
 
 	void set_values(const int length, const int priority) { _length = length; _priority = priority;	}
 	void set_priority(const int value) { _priority = value; }
 	void set_result(const int value) { _result = value; }
-	void set_bad_edge(CEdge* bad_edge) { _bad_edge = bad_edge; }
-
 
 	string name() const
 	{
@@ -34,7 +29,6 @@ public:
 private:
 	int _length;
 	int _priority;
-	CEdge* _bad_edge;
 	int _result;
 };
 
