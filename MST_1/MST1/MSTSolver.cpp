@@ -80,6 +80,12 @@ void CMSTSolver::insert_priority_to_table(CLPriority* pr)
 	_vec_priorities.insert(new_place, pr);
 }
 
+void CMSTSolver::reset_vertices()
+{
+	for (size_t i = 0; i < _vertices.size(); i++)
+		_vertices[i].reset();
+}
+
 int CMSTSolver::solve()
 {
 	sort(_vec_priorities.begin(), _vec_priorities.end(), plpriorcomp());
@@ -89,25 +95,22 @@ int CMSTSolver::solve()
 	cerr << endl;*/
 
 	bool passed = true;
-	CLPriority* best_result = NULL;
+	int best_result = max_int;
+	int best_priority = 0;
 	
 	do
 	{
 		if (!passed)
-		{
-			for (size_t i = 0; i < _vertices.size(); i++)
-				_vertices[i].reset();
-		}
+			reset_vertices();
 
 		CLPriority* test_pr = _vec_priorities.back();
 		_vec_priorities.pop_back();
 
-		passed = best_result != NULL && test_pr->priority() < best_result->priority();
+		passed = test_pr->priority() < best_priority;
 
 		if (!passed && test_pr != NULL)
 		{
-			int max_len = best_result == NULL ? max_int : best_result->result();
-			solve_pass(max_len, test_pr);
+			solve_pass(best_result, test_pr);
 
 			CLPriority* next_pr = _vec_priorities.back();
 			if (next_pr->priority() > test_pr->priority())
@@ -117,15 +120,18 @@ int CMSTSolver::solve()
 			}
 			else
 			{
-				if (best_result == NULL || test_pr->priority() >= best_result->priority() && best_result->result() > test_pr->result())
-					best_result = test_pr;
+				if (test_pr->priority() >= best_priority && best_result > test_pr->result())
+				{
+					best_result = test_pr->result();
+					best_priority = test_pr->priority();
+				}
 
 				passed = next_pr->priority() < test_pr->priority();
 			}
 		}
 	} while (!passed);
 
-	return best_result->result();
+	return best_result;
 }
 
 void CMSTSolver::solve_pass(const int in_max_length, CLPriority* ioPriority)

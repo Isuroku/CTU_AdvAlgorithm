@@ -30,5 +30,7 @@ private:
 
 	void solve_pass(int max_length, CLPriority* ioPriority);
 	void insert_priority_to_table(CLPriority* pr);
+
+	void reset_vertices();
 };
 
