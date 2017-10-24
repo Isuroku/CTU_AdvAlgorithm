@@ -15,7 +15,7 @@ public:
 	CLPriority(): _length(0), _priority(0), _result(max_int) {}
 	explicit CLPriority(const int length) : _length(length), _priority(0), _result(max_int) {}
 	explicit CLPriority(const CLPriority& other) 
-		: _length(other._length), _priority(other._priority), _bad_edges(other._bad_edges), _result(other._result) {}
+		: _length(other._length), _priority(other._priority), _result(other._result), _bad_edges(other._bad_edges) {}
 
 	int length() const { return _length; }
 	int priority() const { return _priority; }
@@ -39,8 +39,8 @@ public:
 
 	bool in_bad_edge_list(CEdge* edge) const 
 	{ 
-		unordered_set<CEdge*>::iterator it = _bad_edges.find(edge);
-		return it != _bad_edges.end(); 
+		unordered_set<CEdge*>::const_iterator it = _bad_edges.find(edge);
+		return it != _bad_edges.cend();
 	}
 
 private:
