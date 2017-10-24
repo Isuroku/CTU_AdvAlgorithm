@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="MST2.cpp" />
+    <ClCompile Include="IOSwitcher.cpp" />
+    <ClCompile Include="MSTSolver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IOSwitcher.h" />
+    <ClInclude Include="Edge.h" />
+    <ClInclude Include="MSTSolver.h" />
+    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="LPriority.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Heap.h" />
+  </ItemGroup>
+</Project>
