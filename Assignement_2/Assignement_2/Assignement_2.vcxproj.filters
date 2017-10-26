@@ -2,5 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Assignement2.cpp" />
+    <ClCompile Include="IOSwitcher.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IOSwitcher.h" />
   </ItemGroup>
 </Project>
