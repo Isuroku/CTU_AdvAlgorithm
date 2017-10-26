@@ -27,8 +27,8 @@ const int arr_file_res[] =
 
 int main()
 {
-	const int test_n = 4;
-	CIOSwitcher IOSwitcher(false, arr_file_names[test_n]);
+	const int test_n = 0;
+	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
 	string line;
 
@@ -44,7 +44,7 @@ int main()
 
 	int count = 0;
 	int v1, v2, l;
-	while (count < edge_count && IOSwitcher.getline(line))  //input from the file in.txt
+	while (IOSwitcher.getline(line))  //input from the file in.txt
 	{
 		if (sscanf(line.c_str(), "%d %d %d", &v1, &v2, &l) != 3)
 		{
