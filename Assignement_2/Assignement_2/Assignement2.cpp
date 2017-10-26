@@ -5,6 +5,7 @@
 #include <cstdarg>
 #include <vector>
 #include <algorithm>
+#include "Edge.h"
 
 #pragma warning( disable : 4996 ) //copy
 
@@ -86,6 +87,24 @@ int main()
 
 		wayfarers_vertex.push_back(val);
 	});
+
+	vector<CEdge*> edges;
+	int count = 3;
+	int v1, v2;
+	while (IOSwitcher.getline(line))  //input from the file in.txt
+	{
+		if (sscanf(line.c_str(), "%d %d", &v1, &v2) != 2)
+		{
+			cerr << "read edge line " << count << " was wrong!";
+			return 1;
+		}
+
+		CEdge* new_edge = new CEdge(v1, v2);
+		edges.push_back(new_edge);
+
+	}
+
+
 
 	/*for_each(wayfarers_vertex.begin(), wayfarers_vertex.end(), [](int i)
 	{

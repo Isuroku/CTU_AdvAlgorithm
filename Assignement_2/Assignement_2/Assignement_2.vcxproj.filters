@@ -6,5 +6,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOSwitcher.h" />
+    <ClInclude Include="Edge.h" />
   </ItemGroup>
 </Project>
