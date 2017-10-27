@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 #include "Edge.h"
+#include "Vertex.h"
+#include "Assignement2.h"
 
 #pragma warning( disable : 4996 ) //copy
 
@@ -52,6 +54,7 @@ void split(const string& instr, const string& delimeter, vector<string>& out_str
 	}
 }
 
+
 int main()
 {
 	int test_n = 0;
@@ -82,13 +85,14 @@ int main()
 		if (sscanf(s.c_str(), "%d", &val) != 1)
 		{
 			cerr << "read wayfarers_vertex line was wrong!";
-			return 1;
+			
 		}
-
-		wayfarers_vertex.push_back(val);
+		else
+			wayfarers_vertex.push_back(val);
 	});
 
 	vector<CEdge> edges(edge_count);
+	vector<CVertex> vertices(vertex_count);
 	int v1, v2;
 	int i = 0;
 	while (IOSwitcher.getline(line))  //input from the file in.txt
@@ -100,15 +104,14 @@ int main()
 		}
 
 		edges[i].init(v1, v2);
+		CVertex& V1 = vertices[v1 - 1];
+		CVertex& V2 = vertices[v2 - 1];
+		V1.SetNeighbours(&V2);
+		
+
 		i++;
 	}
-
-
-
-	/*for_each(wayfarers_vertex.begin(), wayfarers_vertex.end(), [](int i)
-	{
-		cout << i << endl;
-	});*/
+	
 
 
     return 0;
