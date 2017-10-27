@@ -89,20 +89,18 @@ int main()
 	});
 
 	vector<CEdge> edges(edge_count);
-	int count = 3;
 	int v1, v2;
 	int i = 0;
 	while (IOSwitcher.getline(line))  //input from the file in.txt
 	{
 		if (sscanf(line.c_str(), "%d %d", &v1, &v2) != 2)
 		{
-			cerr << "read edge line " << count << " was wrong!";
+			cerr << "read edge line " << i + 3 << " was wrong!";
 			return 1;
 		}
 
 		edges[i].init(v1, v2);
 		i++;
-
 	}
 
 
