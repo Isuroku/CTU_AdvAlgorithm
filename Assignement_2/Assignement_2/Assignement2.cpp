@@ -88,9 +88,10 @@ int main()
 		wayfarers_vertex.push_back(val);
 	});
 
-	vector<CEdge*> edges;
+	vector<CEdge> edges(edge_count);
 	int count = 3;
 	int v1, v2;
+	int i = 0;
 	while (IOSwitcher.getline(line))  //input from the file in.txt
 	{
 		if (sscanf(line.c_str(), "%d %d", &v1, &v2) != 2)
@@ -99,8 +100,8 @@ int main()
 			return 1;
 		}
 
-		CEdge* new_edge = new CEdge(v1, v2);
-		edges.push_back(new_edge);
+		edges[i].init(v1, v2);
+		i++;
 
 	}
 
