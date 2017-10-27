@@ -4,11 +4,14 @@
     <ClCompile Include="Assignement2.cpp" />
     <ClCompile Include="IOSwitcher.cpp" />
     <ClCompile Include="Tarjan.cpp" />
+    <ClCompile Include="IOSwitcherW.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOSwitcher.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Assignement2.h" />
+    <ClInclude Include="Tarjan.h" />
+    <ClInclude Include="IOSwitcherW.h" />
   </ItemGroup>
 </Project>

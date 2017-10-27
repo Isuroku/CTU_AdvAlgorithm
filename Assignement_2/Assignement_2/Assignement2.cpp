@@ -8,6 +8,9 @@
 #include "Edge.h"
 #include "Vertex.h"
 #include "Assignement2.h"
+#include "Tarjan.h"
+
+#include <fstream>
 
 #pragma warning( disable : 4996 ) //copy
 
@@ -16,6 +19,12 @@ const string arr_file_names[] =
 {
 	"Pd/pub01.in",
 	"Pd/pub02.in",
+	"Pd/pub03.in",
+	"Pd/pub04.in",
+	"Pd/pub05.in",
+	"Pd/pub06.in",
+	"Pd/pub07.in",
+	"Pd/pub08.in",
 	"Pd/pub09.in",
 	"Pd/pub10.in",
 };
@@ -57,11 +66,11 @@ void split(const string& instr, const string& delimeter, vector<string>& out_str
 
 int main()
 {
-	int test_n = 0;
+	int test_n = 7;
+
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
 	string line;
-
 
 	IOSwitcher.getline(line);
 	int vertex_count, edge_count, wayfarers_count, destination_index;
@@ -106,13 +115,19 @@ int main()
 		edges[i].init(v1, v2);
 		CVertex& V1 = vertices[v1 - 1];
 		CVertex& V2 = vertices[v2 - 1];
+
+		V1.SetID(v1);
+		V2.SetID(v2);
+
 		V1.SetNeighbours(&V2);
-		
 
 		i++;
 	}
 	
+	CTarjan tarjan;
+	tarjan.solve(vertices);
 
+	tarjan.printscr();
 
     return 0;
 }

@@ -1,18 +1,91 @@
-#include "Vertex.h"
+#include "Tarjan.h"
+#include <algorithm>
+#include <vector>
+#include <iostream>
 
+using namespace std;
 
-int index;
-CVertex* S;
-
-void reset_find_SCC()
+void CTarjan::solve(vector<CVertex>& vertices)
 {
-	index = 0;
-	S = NULL;
+	reset_find_SCC();
+	for_each(vertices.begin(), vertices.end(), [this](CVertex& v)
+	{
+		if (v.index == 0)
+			find_SCC(v, 0);
+	});
+}
+
+void CTarjan::reset_find_SCC()
+{
+	_index = 0;
+	_S = NULL;
+	_curr_scc_index = 0;
+	_max_level = 0;
+}
+
+void CTarjan::push(CVertex& v)
+{
+	v.pred = _S;
+	v.instack = true;
+	_S = &v;
+}
+
+CVertex* CTarjan::pop(CVertex* v)
+{
+	_S = v->pred;
+	v->instack = false;
+	v->pred = NULL;
+	return v;
 }
 
 
 
-void find_SCC(CVertex& in_v)
+void CTarjan::find_SCC(CVertex& v, int level)
 {
-	//in_v.
+	if (_max_level < level)
+		_max_level = level;
+
+	v.index = v.lowlink = ++_index;
+	push(v);
+
+	for each (CVertex* w in v.neighbours)
+	{
+		if(w->index == 0)
+		{
+			find_SCC(*w, level + 1);
+			v.lowlink = min(v.lowlink, w->lowlink);
+		}
+		else if(w->instack)
+		{
+			v.lowlink = min(v.lowlink, w->index);
+		}
+	} 
+
+	if(v.lowlink == v.index)
+	{
+		CVertex* x;
+		do
+		{
+			x = pop(_S);
+
+			if(_curr_scc_index == _scc.size())
+				_scc.push_back(vector<CVertex*>());
+
+			_scc[_curr_scc_index].push_back(x);
+		} while (x != &v);
+		
+		_curr_scc_index++;
+	}
+}
+
+void CTarjan::printscr() const
+{
+	for each(vector<CVertex*> vec in _scc)
+	{
+		for each(CVertex* v in vec)
+		{
+			cout << v->GetID() << " ";
+		}
+		cout << endl;
+	}
 }
