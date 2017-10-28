@@ -153,6 +153,7 @@
     <ClInclude Include="IOSwitcher.h" />
     <ClInclude Include="Tarjan.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="VertexC.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

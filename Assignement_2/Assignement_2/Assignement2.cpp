@@ -11,6 +11,7 @@
 #include "Tarjan.h"
 
 #include <fstream>
+#include "VertexC.h"
 
 #pragma warning( disable : 4996 ) //copy
 
@@ -100,8 +101,8 @@ int main()
 			wayfarers_vertex.push_back(val);
 	});
 
-	vector<CEdge> edges(edge_count);
-	vector<CVertex> vertices(vertex_count);
+	//vector<CEdge> edges(edge_count);
+	vector<CVertexT> vertices(vertex_count);
 	vertices[destination_index - 1].isDestination = true;
 	int v1, v2;
 	int i = 0;
@@ -113,9 +114,9 @@ int main()
 			return 1;
 		}
 
-		edges[i].init(v1, v2);
-		CVertex& V1 = vertices[v1 - 1];
-		CVertex& V2 = vertices[v2 - 1];
+		//edges[i].init(v1, v2);
+		CVertexT& V1 = vertices[v1 - 1];
+		CVertexT& V2 = vertices[v2 - 1];
 
 		V1.SetID(v1);
 		V2.SetID(v2);
@@ -124,38 +125,80 @@ int main()
 
 		i++;
 	}
+
+	for each(int w_t_i in wayfarers_vertex)
+		vertices[w_t_i - 1].wayfarer_count++;
 	
 	CTarjan tarjan;
 	tarjan.solve(vertices);
 
-	size_t components_count = tarjan.GetComponentsCount();
+	const size_t components_count = tarjan.GetComponentsCount();
 
-	vector<CVertex> component_vertices(components_count);
-	int last_index = vertices.size() + 1;
-	
-
+	vector<CVertexTC> component_vertices(components_count);
 	for (size_t i = 0; i < component_vertices.size(); i++)
 	{
-		CVertex& var = component_vertices[i];
-		var.SetID(last_index + i);
-		var.lowlink = tarjan.GetComponentLowLink(i);
-		var.weight = tarjan.GetComponentWeight(i);
-		const vector<CVertex*>& comp = tarjan.GetComponent(i);
+		CVertexTC& var_c = component_vertices[i];
+		var_c.weight = tarjan.GetComponentWeight(i);
+
+		const vector<CVertexT*>& comp = tarjan.GetComponent(i);
 
 		for (size_t j = 0; j < comp.size(); j++)
 		{
-			CVertex* var2 = comp[j];
-			for (size_t k = 0; k < var2->neighbours.size(); k++)
+			CVertexT* var_t = comp[j];
+			for (size_t k = 0; k < var_t->neighbours.size(); k++)
 			{
-				CVertex* n = var2->neighbours[k];
-				int n_lowlink = n->lowlink;
-				if (n_lowlink != var.lowlink)
+				CVertexT* n = var_t->neighbours[k];
+				const int n_lowlink = n->lowlink;
+				if (n_lowlink != var_t->lowlink)
 				{
-					size_t index_n_component = tarjan.GetComponentIndex(n_lowlink);
-					var.SetNeighbours(&component_vertices[index_n_component]);
+					const size_t index_n_component = tarjan.GetComponentIndex(n_lowlink);
+
+					CVertexTC& cn = component_vertices[index_n_component];
+					var_c.neighbours.push_back(&cn);
+
+					cn.rear_neighbours.push_back(&var_c);
 				}
 			}
+
+			var_c.wayfarer_count += var_t->wayfarer_count;
+			if (var_t->isDestination)
+				var_c.dest = true;
+
+			var_c.SetID(var_t->GetID());
 		}
+	}
+
+	deque<CVertexTC*> vstack;
+	for (size_t i = 0; i < component_vertices.size(); i++)
+	{
+		vstack.clear();
+
+		CVertexTC& var_c = component_vertices[i];
+		size_t find_w = var_c.wayfarer_count;
+
+		vstack.push_back(&var_c);
+
+		while(!vstack.empty() && find_w < wayfarers_count)
+		{
+			CVertexTC* v = vstack.back();
+			vstack.pop_back();
+
+			for each(CVertexTC* rn in v->rear_neighbours)
+			{
+				find_w += rn->wayfarer_count;
+				vstack.push_back(rn);
+			}
+		}
+
+		if (find_w == wayfarers_count)
+		{
+			
+		}
+
+		/*if (find_w == wayfarers_count)
+			cout << var_c.GetID() << "-ok" << endl;
+		else
+			cout << var_c.GetID() << "-fail" << endl;*/
 	}
 
 

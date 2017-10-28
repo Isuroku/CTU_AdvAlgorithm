@@ -2,14 +2,15 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include "Vertex.h"
 
 
 using namespace std;
 
-void CTarjan::solve(vector<CVertex>& vertices)
+void CTarjan::solve(vector<CVertexT>& vertices)
 {
 	reset_find_SCC();
-	for_each(vertices.begin(), vertices.end(), [this](CVertex& v)
+	for_each(vertices.begin(), vertices.end(), [this](CVertexT& v)
 	{
 		if (v.index == 0)
 			find_SCC2(v);
@@ -24,14 +25,14 @@ void CTarjan::reset_find_SCC()
 	_max_level = 0;
 }
 
-void CTarjan::push(CVertex& v)
+void CTarjan::push(CVertexT& v)
 {
 	v.pred = _S;
 	v.instack = true;
 	_S = &v;
 }
 
-CVertex* CTarjan::pop(CVertex* v)
+CVertexT* CTarjan::pop(CVertexT* v)
 {
 	_S = v->pred;
 	v->instack = false;
@@ -41,12 +42,12 @@ CVertex* CTarjan::pop(CVertex* v)
 
 
 
-void CTarjan::find_SCC(CVertex& v)
+void CTarjan::find_SCC(CVertexT& v)
 {
 	v.index = v.lowlink = ++_index;
 	push(v);
 
-	for each (CVertex* w in v.neighbours)
+	for each (CVertexT* w in v.neighbours)
 	{
 		if(w->index == 0)
 		{
@@ -62,11 +63,11 @@ void CTarjan::find_SCC(CVertex& v)
 	check_vertex_collect_scc(v);
 }
 
-void CTarjan::check_vertex_collect_scc(CVertex& v)
+void CTarjan::check_vertex_collect_scc(CVertexT& v)
 {
 	if (v.lowlink == v.index)
 	{
-		CVertex* x;
+		CVertexT* x;
 		do
 		{
 			x = pop(_S);
@@ -74,7 +75,7 @@ void CTarjan::check_vertex_collect_scc(CVertex& v)
 			if (_curr_scc_index == _scc.size())
 			{
 				_lowlink_componentindex.insert(pair<int,size_t>(v.lowlink, _scc.size()));
-				_scc.push_back(vector<CVertex*>());
+				_scc.push_back(vector<CVertexT*>());
 			}
 
 			_scc[_curr_scc_index].push_back(x);
@@ -86,9 +87,9 @@ void CTarjan::check_vertex_collect_scc(CVertex& v)
 
 void CTarjan::printscr() const
 {
-	for each(vector<CVertex*> vec in _scc)
+	for each(vector<CVertexT*> vec in _scc)
 	{
-		for each(CVertex* v in vec)
+		for each(CVertexT* v in vec)
 		{
 			cout << v->GetID() << " ";
 		}
@@ -96,7 +97,7 @@ void CTarjan::printscr() const
 	}
 }
 
-CTarjan::CStackInfo CTarjan::set_curr(CVertex* v)
+CTarjan::CStackInfo CTarjan::set_curr(CVertexT* v)
 {
 	v->index = v->lowlink = ++_index;
 	push(*v);
@@ -104,13 +105,13 @@ CTarjan::CStackInfo CTarjan::set_curr(CVertex* v)
 	return CStackInfo(v);
 }
 
-void CTarjan::find_SCC2(CVertex& v)
+void CTarjan::find_SCC2(CVertexT& v)
 {
 	_curr = set_curr(&v);
 
 	while(!_stack.empty() || _curr.vertex() != NULL)
 	{
-		CVertex* w = _curr.GetNextNeighbour();
+		CVertexT* w = _curr.GetNextNeighbour();
 		if(w != NULL && w->index == 0)
 		{
 			_stack.push(_curr);

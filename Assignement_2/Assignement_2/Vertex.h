@@ -4,25 +4,25 @@
 
 using namespace std;
 
-class CVertex
+class CVertexT
 {
 
 public:
 	int index;
 	int lowlink;
 	bool isDestination;
-	CVertex* pred;
+	CVertexT* pred;
 	bool instack;
-	int weight;
-	vector<CVertex*> neighbours;
+	int wayfarer_count;
+	vector<CVertexT*> neighbours;
 
-	CVertex(): index(0), lowlink(0), pred(NULL), instack(false), _id(0), isDestination(false), weight(1) {}
-	/*CVertex(int in_id) : index(0), lowlink(0), pred(NULL), instack(false), _id(in_id) {}*/
+	CVertexT(): index(0), lowlink(0), isDestination(false), pred(NULL), instack(false), wayfarer_count(0), _id(0) {}
+	/*CVertexTT(int in_id) : index(0), lowlink(0), pred(NULL), instack(false), _id(in_id) {}*/
 
 
 	int GetID() const { return _id; }
 	void SetID(int in_id) { _id = in_id; }
-	void SetNeighbours(CVertex* in_n)	{	neighbours.push_back(in_n);	}
+	void SetNeighbours(CVertexT* in_n)	{	neighbours.push_back(in_n);	}
 
 private:
 	int _id;

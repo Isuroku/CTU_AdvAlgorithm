@@ -8,30 +8,28 @@ class CTarjan
 {
 public:
 
-	void solve(vector<CVertex>& vertices);
+	void solve(vector<CVertexT>& vertices);
 	size_t GetComponentsCount() const { return _scc.size(); }
 	size_t GetComponentWeight(size_t index) const { return _scc[index].size(); }
 	int GetComponentLowLink(size_t index) const { return _scc[index].at(0)->lowlink; }
 	size_t GetComponentIndex(int lowlink) const { return _lowlink_componentindex.at(lowlink); }
-	const vector<CVertex*>& GetComponent(int index) const { return _scc[index]; }
+	const vector<CVertexT*>& GetComponent(size_t index) const { return _scc[index]; }
 	void printscr() const;
-	
-	
 
 private:
-	vector<vector<CVertex*>> _scc;
+	vector<vector<CVertexT*>> _scc;
 
 	void reset_find_SCC();
-	void find_SCC(CVertex& v);
-	void find_SCC2(CVertex& v);
+	void find_SCC(CVertexT& v);
+	void find_SCC2(CVertexT& v);
 
-	CVertex* pop(CVertex* v);
-	void push(CVertex& v);
+	CVertexT* pop(CVertexT* v);
+	void push(CVertexT& v);
 	
 
 	int _index;
 	int _max_level;
-	CVertex* _S;
+	CVertexT* _S;
 	size_t _curr_scc_index;
 	map<int, size_t> _lowlink_componentindex;
 
@@ -40,9 +38,9 @@ private:
 	{
 	public:
 		CStackInfo() : _vertex(NULL), _neighbour(-1) {}
-		CStackInfo(CVertex* in_vertex): _vertex(in_vertex), _neighbour(-1) {}
+		CStackInfo(CVertexT* in_vertex): _vertex(in_vertex), _neighbour(-1) {}
 
-		CVertex* GetNextNeighbour()
+		CVertexT* GetNextNeighbour()
 		{
 			_neighbour++;
 			if (_neighbour >= _vertex->neighbours.size())
@@ -56,18 +54,18 @@ private:
 			_neighbour = -1;
 		}
 
-		CVertex* vertex() const { return _vertex; }
+		CVertexT* vertex() const { return _vertex; }
 
 	private:
-		CVertex* _vertex;
+		CVertexT* _vertex;
 		size_t _neighbour;
 	};
 
 	stack<CStackInfo> _stack;
 	CStackInfo _curr;
 
-	CStackInfo set_curr(CVertex* v);
-	void check_vertex_collect_scc(CVertex& v);
+	CStackInfo set_curr(CVertexT* v);
+	void check_vertex_collect_scc(CVertexT& v);
 };
 
 
