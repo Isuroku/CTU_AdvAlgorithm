@@ -66,7 +66,7 @@ void split(const string& instr, const string& delimeter, vector<string>& out_str
 
 int main()
 {
-	int test_n = 7;
+	int test_n = 0;
 
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 

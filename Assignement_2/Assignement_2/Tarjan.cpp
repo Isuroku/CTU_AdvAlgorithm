@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 
+
 using namespace std;
 
 void CTarjan::solve(vector<CVertex>& vertices)
@@ -11,7 +12,7 @@ void CTarjan::solve(vector<CVertex>& vertices)
 	for_each(vertices.begin(), vertices.end(), [this](CVertex& v)
 	{
 		if (v.index == 0)
-			find_SCC(v, 0);
+			find_SCC2(v);
 	});
 }
 
@@ -40,11 +41,8 @@ CVertex* CTarjan::pop(CVertex* v)
 
 
 
-void CTarjan::find_SCC(CVertex& v, int level)
+void CTarjan::find_SCC(CVertex& v)
 {
-	if (_max_level < level)
-		_max_level = level;
-
 	v.index = v.lowlink = ++_index;
 	push(v);
 
@@ -52,7 +50,7 @@ void CTarjan::find_SCC(CVertex& v, int level)
 	{
 		if(w->index == 0)
 		{
-			find_SCC(*w, level + 1);
+			find_SCC(*w);
 			v.lowlink = min(v.lowlink, w->lowlink);
 		}
 		else if(w->instack)
@@ -61,19 +59,24 @@ void CTarjan::find_SCC(CVertex& v, int level)
 		}
 	} 
 
-	if(v.lowlink == v.index)
+	check_vertex_collect_scc(v);
+}
+
+void CTarjan::check_vertex_collect_scc(CVertex& v)
+{
+	if (v.lowlink == v.index)
 	{
 		CVertex* x;
 		do
 		{
 			x = pop(_S);
 
-			if(_curr_scc_index == _scc.size())
+			if (_curr_scc_index == _scc.size())
 				_scc.push_back(vector<CVertex*>());
 
 			_scc[_curr_scc_index].push_back(x);
 		} while (x != &v);
-		
+
 		_curr_scc_index++;
 	}
 }
@@ -87,5 +90,47 @@ void CTarjan::printscr() const
 			cout << v->GetID() << " ";
 		}
 		cout << endl;
+	}
+}
+
+CTarjan::CStackInfo CTarjan::set_curr(CVertex* v)
+{
+	v->index = v->lowlink = ++_index;
+	push(*v);
+
+	return CStackInfo(v);
+}
+
+void CTarjan::find_SCC2(CVertex& v)
+{
+	_curr = set_curr(&v);
+
+	while(!_stack.empty() || _curr.vertex() != NULL)
+	{
+		CVertex* w = _curr.GetNextNeighbour();
+		if(w != NULL && w->index == 0)
+		{
+			_stack.push(_curr);
+			_curr = set_curr(w);
+		}
+		else if(w != NULL && w->instack)
+		{
+			_curr.vertex()->lowlink = min(_curr.vertex()->lowlink, w->index);
+		}
+		else
+		{
+			check_vertex_collect_scc(*_curr.vertex());
+
+			if(_stack.empty())
+				_curr.reset();
+			else
+			{
+				CStackInfo pred = _stack.top();
+				pred.vertex()->lowlink = min(pred.vertex()->lowlink, _curr.vertex()->lowlink);
+
+				_curr = pred;
+				_stack.pop();
+			}
+		}
 	}
 }

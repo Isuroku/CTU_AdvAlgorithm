@@ -145,14 +145,12 @@
   <ItemGroup>
     <ClCompile Include="Assignement2.cpp" />
     <ClCompile Include="IOSwitcher.cpp" />
-    <ClCompile Include="IOSwitcherW.cpp" />
     <ClCompile Include="Tarjan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assignement2.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="IOSwitcher.h" />
-    <ClInclude Include="IOSwitcherW.h" />
     <ClInclude Include="Tarjan.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
