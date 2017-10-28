@@ -144,12 +144,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Assignement2.cpp" />
+    <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="IOSwitcher.cpp" />
     <ClCompile Include="Tarjan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assignement2.h" />
+    <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="Heap.h" />
     <ClInclude Include="IOSwitcher.h" />
     <ClInclude Include="Tarjan.h" />
     <ClInclude Include="Vertex.h" />

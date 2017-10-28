@@ -4,6 +4,7 @@
     <ClCompile Include="Assignement2.cpp" />
     <ClCompile Include="IOSwitcher.cpp" />
     <ClCompile Include="Tarjan.cpp" />
+    <ClCompile Include="Dijkstra.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOSwitcher.h" />
@@ -12,5 +13,7 @@
     <ClInclude Include="Assignement2.h" />
     <ClInclude Include="Tarjan.h" />
     <ClInclude Include="VertexC.h" />
+    <ClInclude Include="Heap.h" />
+    <ClInclude Include="Dijkstra.h" />
   </ItemGroup>
 </Project>

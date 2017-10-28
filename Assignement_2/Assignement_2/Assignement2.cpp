@@ -12,6 +12,7 @@
 
 #include <fstream>
 #include "VertexC.h"
+#include "Dijkstra.h"
 
 #pragma warning( disable : 4996 ) //copy
 
@@ -67,7 +68,7 @@ void split(const string& instr, const string& delimeter, vector<string>& out_str
 
 int main()
 {
-	int test_n = 0;
+	int test_n = 8; //5, 7 - bad
 
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
@@ -134,10 +135,13 @@ int main()
 
 	const size_t components_count = tarjan.GetComponentsCount();
 
-	vector<CVertexTC> component_vertices(components_count);
+	vector<CVertexC> component_vertices(components_count);
+
+	CVertexC* desc_vert = NULL;
+
 	for (size_t i = 0; i < component_vertices.size(); i++)
 	{
-		CVertexTC& var_c = component_vertices[i];
+		CVertexC& var_c = component_vertices[i];
 		var_c.weight = tarjan.GetComponentWeight(i);
 
 		const vector<CVertexT*>& comp = tarjan.GetComponent(i);
@@ -148,42 +152,49 @@ int main()
 			for (size_t k = 0; k < var_t->neighbours.size(); k++)
 			{
 				CVertexT* n = var_t->neighbours[k];
-				const int n_lowlink = n->lowlink;
-				if (n_lowlink != var_t->lowlink)
+				const size_t n_comp_index = n->comp_index;
+				if (n_comp_index != var_t->comp_index)
 				{
-					const size_t index_n_component = tarjan.GetComponentIndex(n_lowlink);
-
-					CVertexTC& cn = component_vertices[index_n_component];
-					var_c.neighbours.push_back(&cn);
-
-					cn.rear_neighbours.push_back(&var_c);
+					CVertexC& cn = component_vertices[n_comp_index];
+					if (find(var_c.neighbours.begin(), var_c.neighbours.end(), &cn) == var_c.neighbours.end())
+					{
+						var_c.neighbours.push_back(&cn);
+						cn.rear_neighbours.push_back(&var_c);
+					}
 				}
 			}
 
 			var_c.wayfarer_count += var_t->wayfarer_count;
 			if (var_t->isDestination)
+			{
 				var_c.dest = true;
+				desc_vert = &var_c;
+			}
 
-			var_c.SetID(var_t->GetID());
+			int id = var_t->GetID();
+			var_c.SetID(id);
 		}
 	}
 
-	deque<CVertexTC*> vstack;
+	deque<CVertexC*> vstack;
+
+	size_t max_res = 0;
+
 	for (size_t i = 0; i < component_vertices.size(); i++)
 	{
 		vstack.clear();
 
-		CVertexTC& var_c = component_vertices[i];
+		CVertexC& var_c = component_vertices[i];
 		size_t find_w = var_c.wayfarer_count;
 
 		vstack.push_back(&var_c);
 
 		while(!vstack.empty() && find_w < wayfarers_count)
 		{
-			CVertexTC* v = vstack.back();
+			CVertexC* v = vstack.back();
 			vstack.pop_back();
 
-			for each(CVertexTC* rn in v->rear_neighbours)
+			for each(CVertexC* rn in v->rear_neighbours)
 			{
 				find_w += rn->wayfarer_count;
 				vstack.push_back(rn);
@@ -192,7 +203,8 @@ int main()
 
 		if (find_w == wayfarers_count)
 		{
-			
+			size_t res = FindPathLength(&var_c);
+			max_res = max(max_res, res);
 		}
 
 		/*if (find_w == wayfarers_count)
@@ -203,6 +215,8 @@ int main()
 
 
 	//tarjan.printscr();
+
+	cout << max_res;
 
     return 0;
 }

@@ -13,7 +13,7 @@ void CTarjan::solve(vector<CVertexT>& vertices)
 	for_each(vertices.begin(), vertices.end(), [this](CVertexT& v)
 	{
 		if (v.index == 0)
-			find_SCC2(v);
+			find_SCC(v);
 	});
 }
 
@@ -73,12 +73,10 @@ void CTarjan::check_vertex_collect_scc(CVertexT& v)
 			x = pop(_S);
 
 			if (_curr_scc_index == _scc.size())
-			{
-				_lowlink_componentindex.insert(pair<int,size_t>(v.lowlink, _scc.size()));
 				_scc.push_back(vector<CVertexT*>());
-			}
 
 			_scc[_curr_scc_index].push_back(x);
+			x->comp_index = _curr_scc_index;
 		} while (x != &v);
 
 		_curr_scc_index++;
