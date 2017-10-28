@@ -72,7 +72,10 @@ void CTarjan::check_vertex_collect_scc(CVertex& v)
 			x = pop(_S);
 
 			if (_curr_scc_index == _scc.size())
+			{
+				_lowlink_componentindex.insert(pair<int,size_t>(v.lowlink, _scc.size()));
 				_scc.push_back(vector<CVertex*>());
+			}
 
 			_scc[_curr_scc_index].push_back(x);
 		} while (x != &v);

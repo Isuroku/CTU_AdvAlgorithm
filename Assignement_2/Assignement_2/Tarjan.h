@@ -1,14 +1,22 @@
 #pragma once
 #include "Vertex.h"
 #include <stack>
+#include <map>
+using namespace std;
 
 class CTarjan
 {
 public:
 
 	void solve(vector<CVertex>& vertices);
-
+	size_t GetComponentsCount() const { return _scc.size(); }
+	size_t GetComponentWeight(size_t index) const { return _scc[index].size(); }
+	int GetComponentLowLink(size_t index) const { return _scc[index].at(0)->lowlink; }
+	size_t GetComponentIndex(int lowlink) const { return _lowlink_componentindex.at(lowlink); }
+	const vector<CVertex*>& GetComponent(int index) const { return _scc[index]; }
 	void printscr() const;
+	
+	
 
 private:
 	vector<vector<CVertex*>> _scc;
@@ -19,11 +27,14 @@ private:
 
 	CVertex* pop(CVertex* v);
 	void push(CVertex& v);
+	
 
 	int _index;
 	int _max_level;
 	CVertex* _S;
 	size_t _curr_scc_index;
+	map<int, size_t> _lowlink_componentindex;
+
 
 	class CStackInfo
 	{

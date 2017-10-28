@@ -102,6 +102,7 @@ int main()
 
 	vector<CEdge> edges(edge_count);
 	vector<CVertex> vertices(vertex_count);
+	vertices[destination_index - 1].isDestination = true;
 	int v1, v2;
 	int i = 0;
 	while (IOSwitcher.getline(line))  //input from the file in.txt
@@ -127,7 +128,38 @@ int main()
 	CTarjan tarjan;
 	tarjan.solve(vertices);
 
-	tarjan.printscr();
+	size_t components_count = tarjan.GetComponentsCount();
+
+	vector<CVertex> component_vertices(components_count);
+	int last_index = vertices.size() + 1;
+	
+
+	for (size_t i = 0; i < component_vertices.size(); i++)
+	{
+		CVertex& var = component_vertices[i];
+		var.SetID(last_index + i);
+		var.lowlink = tarjan.GetComponentLowLink(i);
+		var.weight = tarjan.GetComponentWeight(i);
+		const vector<CVertex*>& comp = tarjan.GetComponent(i);
+
+		for (size_t j = 0; j < comp.size(); j++)
+		{
+			CVertex* var2 = comp[j];
+			for (size_t k = 0; k < var2->neighbours.size(); k++)
+			{
+				CVertex* n = var2->neighbours[k];
+				int n_lowlink = n->lowlink;
+				if (n_lowlink != var.lowlink)
+				{
+					size_t index_n_component = tarjan.GetComponentIndex(n_lowlink);
+					var.SetNeighbours(&component_vertices[index_n_component]);
+				}
+			}
+		}
+	}
+
+
+	//tarjan.printscr();
 
     return 0;
 }

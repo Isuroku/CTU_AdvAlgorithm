@@ -10,12 +10,14 @@ class CVertex
 public:
 	int index;
 	int lowlink;
+	bool isDestination;
 	CVertex* pred;
 	bool instack;
+	int weight;
 	vector<CVertex*> neighbours;
 
-	CVertex(): index(0), lowlink(0), pred(NULL), instack(false), _id(0)	{}
-	CVertex(int in_id) : index(0), lowlink(0), pred(NULL), instack(false), _id(in_id) {}
+	CVertex(): index(0), lowlink(0), pred(NULL), instack(false), _id(0), isDestination(false), weight(1) {}
+	/*CVertex(int in_id) : index(0), lowlink(0), pred(NULL), instack(false), _id(in_id) {}*/
 
 
 	int GetID() const { return _id; }
