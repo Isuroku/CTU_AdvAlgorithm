@@ -7,13 +7,18 @@
 
 using namespace std;
 
-void CTarjan::solve(vector<CVertexT>& vertices)
+void CTarjan::solve(vector<CVertexT>& vertices, bool reqursion)
 {
 	reset_find_SCC();
-	for_each(vertices.begin(), vertices.end(), [this](CVertexT& v)
+	for_each(vertices.begin(), vertices.end(), [this, reqursion](CVertexT& v)
 	{
 		if (v.index == 0)
-			find_SCC(v);
+		{
+			if(reqursion)
+				find_SCC(v);
+			else
+				find_SCC2(v);
+		}
 	});
 }
 
@@ -75,8 +80,11 @@ void CTarjan::check_vertex_collect_scc(CVertexT& v)
 			if (_curr_scc_index == _scc.size())
 				_scc.push_back(vector<CVertexT*>());
 
-			_scc[_curr_scc_index].push_back(x);
+			vector<CVertexT*>& comp = _scc[_curr_scc_index];
+			comp.insert(lower_bound(comp.begin(), comp.end(), x), x);
+			//comp.push_back(x);
 			x->comp_index = _curr_scc_index;
+
 		} while (x != &v);
 
 		_curr_scc_index++;
@@ -89,7 +97,7 @@ void CTarjan::printscr() const
 	{
 		for each(CVertexT* v in vec)
 		{
-			cout << v->GetID() << " ";
+			cout << v->id() << " ";
 		}
 		cout << endl;
 	}

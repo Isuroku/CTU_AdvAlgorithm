@@ -146,6 +146,7 @@
     <ClCompile Include="Assignement2.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="IOSwitcher.cpp" />
+    <ClCompile Include="SimpleSCC.cpp" />
     <ClCompile Include="Tarjan.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,8 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="IOSwitcher.h" />
+    <ClInclude Include="SimpleSCC.h" />
+    <ClInclude Include="StronglyConnectedComponents.h" />
     <ClInclude Include="Tarjan.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="VertexC.h" />

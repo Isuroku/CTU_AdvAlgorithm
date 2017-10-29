@@ -13,6 +13,7 @@
 #include <fstream>
 #include "VertexC.h"
 #include "Dijkstra.h"
+#include "SimpleSCC.h"
 
 #pragma warning( disable : 4996 ) //copy
 
@@ -24,7 +25,7 @@ const string arr_file_names[] =
 	"Pd/pub03.in",
 	"Pd/pub04.in",
 	"Pd/pub05.in",
-	"Pd/pub06.in",
+	"Pd/pub06.in", //82
 	"Pd/pub07.in",
 	"Pd/pub08.in",
 	"Pd/pub09.in",
@@ -65,10 +66,48 @@ void split(const string& instr, const string& delimeter, vector<string>& out_str
 	}
 }
 
+bool check_component_vertices(const vector<CVertexC>& component_vertices, const size_t wayfarers_count)
+{
+	size_t wf = 0;
+	bool dest = false;
+
+	for (size_t i = 0; i < component_vertices.size(); i++)
+	{
+		if (!component_vertices[i].check())
+			return false;
+
+		if(component_vertices[i].dest)
+		{
+			if(dest)
+			{
+				cerr << "repeat dest" << endl;
+				return false;
+			}
+
+			dest = true;
+		}
+
+		wf += component_vertices[i].wayfarer_count;
+	}
+
+	if (wayfarers_count != wf)
+	{
+		cerr << "wayfarers sum error" << endl;
+		return false;
+	}
+
+	if (!dest)
+	{
+		cerr << "dest error" << endl;
+		return false;
+	}
+
+	return true;
+}
 
 int main()
 {
-	int test_n = 8; //5, 7 - bad
+	int test_n = 5; //5, 7 - bad
 
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
@@ -94,10 +133,7 @@ int main()
 	{
 		int val;
 		if (sscanf(s.c_str(), "%d", &val) != 1)
-		{
 			cerr << "read wayfarers_vertex line was wrong!";
-			
-		}
 		else
 			wayfarers_vertex.push_back(val);
 	});
@@ -119,63 +155,42 @@ int main()
 		CVertexT& V1 = vertices[v1 - 1];
 		CVertexT& V2 = vertices[v2 - 1];
 
-		V1.SetID(v1);
-		V2.SetID(v2);
+		V1.set_id(v1);
+		V2.set_id(v2);
 
-		V1.SetNeighbours(&V2);
+		V1.neighbours.push_back(&V2);
+		V2.rear_neighbours.push_back(&V1);
 
 		i++;
 	}
 
 	for each(int w_t_i in wayfarers_vertex)
 		vertices[w_t_i - 1].wayfarer_count++;
+
+	CSimpleSCC simple_scc;
+	simple_scc.solve(vertices);
 	
 	CTarjan tarjan;
-	tarjan.solve(vertices);
+	tarjan.solve(vertices, true);
 
-	const size_t components_count = tarjan.GetComponentsCount();
-
-	vector<CVertexC> component_vertices(components_count);
-
-	CVertexC* desc_vert = NULL;
-
-	for (size_t i = 0; i < component_vertices.size(); i++)
+	if(!CStronglyConnectedComponents::compare_scc(tarjan, simple_scc))
 	{
-		CVertexC& var_c = component_vertices[i];
-		var_c.weight = tarjan.GetComponentWeight(i);
-
-		const vector<CVertexT*>& comp = tarjan.GetComponent(i);
-
-		for (size_t j = 0; j < comp.size(); j++)
-		{
-			CVertexT* var_t = comp[j];
-			for (size_t k = 0; k < var_t->neighbours.size(); k++)
-			{
-				CVertexT* n = var_t->neighbours[k];
-				const size_t n_comp_index = n->comp_index;
-				if (n_comp_index != var_t->comp_index)
-				{
-					CVertexC& cn = component_vertices[n_comp_index];
-					if (find(var_c.neighbours.begin(), var_c.neighbours.end(), &cn) == var_c.neighbours.end())
-					{
-						var_c.neighbours.push_back(&cn);
-						cn.rear_neighbours.push_back(&var_c);
-					}
-				}
-			}
-
-			var_c.wayfarer_count += var_t->wayfarer_count;
-			if (var_t->isDestination)
-			{
-				var_c.dest = true;
-				desc_vert = &var_c;
-			}
-
-			int id = var_t->GetID();
-			var_c.SetID(id);
-		}
+		cerr << "scc is wrong! out!" << endl;
+		return 1;
 	}
 
+	const size_t components_count_t = tarjan.GetComponentsCount();
+
+	vector<CVertexC> component_vertices(components_count_t);
+
+	CStronglyConnectedComponents::reduct_graph(static_cast<CStronglyConnectedComponents>(tarjan), component_vertices);
+
+	if(!check_component_vertices(component_vertices, wayfarers_count))
+	{
+		cerr << "reduct scc is wrong! out!" << endl;
+		return 1;
+	}
+	
 	deque<CVertexC*> vstack;
 
 	size_t max_res = 0;
@@ -204,13 +219,10 @@ int main()
 		if (find_w == wayfarers_count)
 		{
 			size_t res = FindPathLength(&var_c);
+			cout << var_c.id() << ": res " << res << "; max " << max_res << endl;
+
 			max_res = max(max_res, res);
 		}
-
-		/*if (find_w == wayfarers_count)
-			cout << var_c.GetID() << "-ok" << endl;
-		else
-			cout << var_c.GetID() << "-fail" << endl;*/
 	}
 
 

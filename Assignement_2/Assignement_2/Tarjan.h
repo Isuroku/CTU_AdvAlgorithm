@@ -1,23 +1,19 @@
 #pragma once
-#include "Vertex.h"
+
 #include <stack>
 #include <map>
-using namespace std;
 
-class CTarjan
+#include "StronglyConnectedComponents.h"
+
+
+class CTarjan : public CStronglyConnectedComponents
 {
 public:
 
-	void solve(vector<CVertexT>& vertices);
-	size_t GetComponentsCount() const { return _scc.size(); }
-	size_t GetComponentWeight(size_t index) const { return _scc[index].size(); }
-	int GetComponentLowLink(size_t index) const { return _scc[index].at(0)->lowlink; }
-	const vector<CVertexT*>& GetComponent(size_t index) const { return _scc[index]; }
+	void solve(vector<CVertexT>& vertices, bool reqursion);
 	void printscr() const;
 
 private:
-	vector<vector<CVertexT*>> _scc;
-
 	void reset_find_SCC();
 	void find_SCC(CVertexT& v);
 	void find_SCC2(CVertexT& v);

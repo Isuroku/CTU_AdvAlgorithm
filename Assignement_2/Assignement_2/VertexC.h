@@ -1,42 +1,96 @@
 #pragma once
 #include <cstddef>
+#include <iostream>
+#include <sstream>
+
 #include <vector>
 #include "Heap.h"
+#include "Vertex.h"
 
 using namespace std;
 
 class CVertexC: public CHeapElem
 {
 public:
-	int _id;
-	
+	size_t _id;
 	size_t wayfarer_count;
 	size_t weight;
-
 	bool dest;
+	size_t _heap_index;
+	size_t wave_length;
+
+	size_t get_wayfarer_count() const
+	{
+		size_t sum = 0;
+		for each (const CVertexT* v in included)
+			sum += v->wayfarer_count;
+
+		return sum;
+	};
+
+	size_t get_weight() const { return included.size();	};
+
+	bool is_dest() const
+	{
+		for each (const CVertexT* v in included)
+			if (v->isDestination)
+ 				return true;
+		return false;
+	}
+
+	CVertexC() : _id(0), wayfarer_count(0), weight(1), dest(false), _heap_index(-1), wave_length(0) {}
 
 	vector<CVertexC*> neighbours;
 	vector<CVertexC*> rear_neighbours;
 
-	size_t _heap_index;
-	size_t wave_length;
+	vector<CVertexT*> included;
 
-	CVertexC() : _id(0), wayfarer_count(0), weight(1), dest(false), _heap_index(-1), wave_length(0) {}
-
-	int GetID() const { return _id; }
-	void SetID(const int in_id) { _id = in_id; }
+	size_t id() const { return _id; }
+	void set_id(const size_t in_id) { _id = in_id; }
 
 	float heap_weight() const override { return static_cast<float>(wave_length); }
 	void set_heap_index(const size_t index) override { _heap_index = index; }
 	size_t get_heap_index() const override { return _heap_index; }
-	
+
+	bool check() const
+	{
+		bool res = true;
+		if(get_wayfarer_count() != wayfarer_count)
+		{
+			cerr << debug_info() << "wayfarer_count - error!" << endl;
+			res = false;
+		}
+		if (get_weight() != weight)
+		{
+			cerr << debug_info() << "weight - error!" << endl;
+			res = false;
+		}
+		if (is_dest() != dest)
+		{
+			cerr << debug_info() << "dest - error!" << endl;
+			res = false;
+		}
+		return res;
+	}
+
+	string debug_info() const
+	{
+		stringstream ss;
+		ss << "scc vertex " << _id << ": ";
+		return ss.str();
+	}
 };
 
 struct SWeightComp2: public SWeightComp
 {
 	virtual ~SWeightComp2() {};
 
-	bool better(const float weight1, const float weight2) override
+	bool better(const CHeapElem& elem1, const CHeapElem& elem2) override
+	{
+		return static_cast<const CVertexC&>(elem1).weight > static_cast<const CVertexC&>(elem2).weight;
+	};
+
+	static bool waight_better(const size_t weight1, const size_t weight2)
 	{
 		return weight1 > weight2;
 	};

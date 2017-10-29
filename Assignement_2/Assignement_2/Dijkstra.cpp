@@ -9,7 +9,7 @@ size_t FindPathLength(CVertexC* inStartVertex)
 	_heap.clear();
 
 	inStartVertex->wave_length = inStartVertex->weight;
-	_heap.insert(inStartVertex);
+	_heap.insert(*inStartVertex);
 
 	size_t res = 0;
 
@@ -26,9 +26,9 @@ size_t FindPathLength(CVertexC* inStartVertex)
 				if (n->get_heap_index() == static_cast<size_t>(-1))
 				{
 					n->wave_length = n->weight + v->wave_length;
-					_heap.insert(n);
+					_heap.insert(*n);
 				}
-				else if (comp.better(static_cast<float>(n->weight + v->wave_length), static_cast<float>(n->wave_length)))
+				else if (SWeightComp2::waight_better(n->weight + v->wave_length, n->wave_length))
 				{
 					n->wave_length = n->weight + v->wave_length;
 					_heap.up(n);

@@ -5,6 +5,7 @@
     <ClCompile Include="IOSwitcher.cpp" />
     <ClCompile Include="Tarjan.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
+    <ClCompile Include="SimpleSCC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOSwitcher.h" />
@@ -15,5 +16,7 @@
     <ClInclude Include="VertexC.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="Dijkstra.h" />
+    <ClInclude Include="SimpleSCC.h" />
+    <ClInclude Include="StronglyConnectedComponents.h" />
   </ItemGroup>
 </Project>

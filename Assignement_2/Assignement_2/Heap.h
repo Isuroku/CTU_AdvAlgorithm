@@ -1,12 +1,15 @@
 #pragma once
 #include <vector>
+
 using namespace std;
+
+class CHeapElem;
 
 struct SWeightComp
 {
 	virtual ~SWeightComp() {};
 
-	virtual bool better(const float weight1, const float weight2) = 0;
+	virtual bool better(const CHeapElem& elem1, const CHeapElem& elem2) = 0;
 };
 
 class CHeapElem
@@ -36,20 +39,20 @@ public:
 	{
 	}
 
-	void insert(CHeapElem* inElem)
+	void insert(CHeapElem& inElem)
 	{
 		_array_size++;
 		if (_array_size>_array.size())
 			_array.resize(_array_size * 2 + 100, NULL);
 
 		size_t dwI = _array_size;
-		while (dwI > 1 && _comp->better(inElem->heap_weight(), _array[GetHeapParent(dwI) - 1]->heap_weight()))
+		while (dwI > 1 && _comp->better(inElem, *_array[GetHeapParent(dwI) - 1]))
 		{
 			_array[dwI - 1] = _array[GetHeapParent(dwI) - 1];
 			_array[dwI - 1]->set_heap_index(dwI);
 			dwI = GetHeapParent(dwI);
 		}
-		_array[dwI - 1] = inElem;
+		_array[dwI - 1] = &inElem;
 		_array[dwI - 1]->set_heap_index(dwI);
 	}
 
@@ -74,7 +77,7 @@ public:
 	void up(const size_t in_heap_index)
 	{
 		size_t dwI = in_heap_index;
-		if (dwI > 1 && _comp->better(_array[dwI - 1]->heap_weight(), _array[GetHeapParent(dwI) - 1]->heap_weight()))
+		if (dwI > 1 && _comp->better(*_array[dwI - 1], *_array[GetHeapParent(dwI) - 1]))
 		{
 			CHeapElem* p = _array[dwI - 1];
 			_array[dwI - 1] = _array[GetHeapParent(dwI) - 1];
@@ -98,9 +101,9 @@ public:
 		size_t r = GetHeapRight(in_dwInd);
 		size_t largest = in_dwInd;
 
-		if (l <= _array_size && _comp->better(_array[l - 1]->heap_weight(), _array[in_dwInd - 1]->heap_weight()))
+		if (l <= _array_size && _comp->better(*_array[l - 1], *_array[in_dwInd - 1]))
 			largest = l;
-		if (r <= _array_size && _comp->better(_array[r - 1]->heap_weight(), _array[largest - 1]->heap_weight()))
+		if (r <= _array_size && _comp->better(*_array[r - 1], *_array[largest - 1]))
 			largest = r;
 		if (largest != in_dwInd)
 		{
