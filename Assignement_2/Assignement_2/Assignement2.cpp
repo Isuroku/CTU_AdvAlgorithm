@@ -5,8 +5,8 @@
 #include <cstdarg>
 #include <vector>
 #include <algorithm>
-#include "Edge.h"
-#include "Vertex.h"
+//#include "Edge.h"
+#include "VertexT.h"
 #include "Assignement2.h"
 #include "Tarjan.h"
 
@@ -14,21 +14,22 @@
 #include "VertexC.h"
 #include "Dijkstra.h"
 #include "SimpleSCC.h"
+#include "save_txt_file.h"
 
 #pragma warning( disable : 4996 ) //copy
 
 
 const string arr_file_names[] =
 {
-	"Pd/pub01.in",
-	"Pd/pub02.in",
-	"Pd/pub03.in",
-	"Pd/pub04.in",
-	"Pd/pub05.in",
+	"Pd/pub01.in", //3
+	"Pd/pub02.in", //3
+	"Pd/pub03.in", //8
+	"Pd/pub04.in", //8
+	"Pd/pub05.in", //16
 	"Pd/pub06.in", //82
-	"Pd/pub07.in",
-	"Pd/pub08.in",
-	"Pd/pub09.in",
+	"Pd/pub07.in", //30
+	"Pd/pub08.in", //4417
+	"Pd/pub09.in", //5
 	"Pd/pub10.in",
 };
 
@@ -85,9 +86,13 @@ bool check_component_vertices(const vector<CVertexC>& component_vertices, const 
 			}
 
 			dest = true;
+			cout << " Dest in " << component_vertices[i]._id << endl;
 		}
 
-		wf += component_vertices[i].wayfarer_count;
+		if(component_vertices[i].get_wayfarer_count() > 0)
+			cout << component_vertices[i].get_wayfarer_count() << " WF in " << component_vertices[i]._id << endl;
+
+		wf += component_vertices[i].get_wayfarer_count();
 	}
 
 	if (wayfarers_count != wf)
@@ -107,7 +112,7 @@ bool check_component_vertices(const vector<CVertexC>& component_vertices, const 
 
 int main()
 {
-	int test_n = 5; //5, 7 - bad
+	int test_n = 4;
 
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
@@ -140,7 +145,7 @@ int main()
 
 	//vector<CEdge> edges(edge_count);
 	vector<CVertexT> vertices(vertex_count);
-	vertices[destination_index - 1].isDestination = true;
+	vertices[destination_index - 1].dest = true;
 	int v1, v2;
 	int i = 0;
 	while (IOSwitcher.getline(line))  //input from the file in.txt
@@ -164,14 +169,19 @@ int main()
 		i++;
 	}
 
+	size_t wayfarers_ids = 0;
 	for each(int w_t_i in wayfarers_vertex)
-		vertices[w_t_i - 1].wayfarer_count++;
+		vertices[w_t_i - 1].wayfarers.push_back(wayfarers_ids++);
 
 	CSimpleSCC simple_scc;
 	simple_scc.solve(vertices);
+
+	/*CSaveGraph sg;
+	sg.save_txt_file(vertices, "out.grafa");
+	return 0;*/
 	
 	CTarjan tarjan;
-	tarjan.solve(vertices, true);
+	tarjan.solve(vertices, false);
 
 	if(!CStronglyConnectedComponents::compare_scc(tarjan, simple_scc))
 	{
@@ -190,7 +200,11 @@ int main()
 		cerr << "reduct scc is wrong! out!" << endl;
 		return 1;
 	}
-	
+
+	/*CSaveGraph sg;
+	sg.save_txt_file(component_vertices, "out.grafa");
+	return 0;*/
+
 	deque<CVertexC*> vstack;
 
 	size_t max_res = 0;
@@ -199,8 +213,19 @@ int main()
 	{
 		vstack.clear();
 
+		vector<size_t> wayfarer_finded(wayfarers_count, false);
+
 		CVertexC& var_c = component_vertices[i];
-		size_t find_w = var_c.wayfarer_count;
+		size_t find_w = 0;
+		
+		for each(size_t wf in var_c.wayfarers)
+		{
+			if (!wayfarer_finded[wf])
+			{
+				wayfarer_finded[wf] = true;
+				find_w++;
+			}
+		}
 
 		vstack.push_back(&var_c);
 
@@ -211,7 +236,15 @@ int main()
 
 			for each(CVertexC* rn in v->rear_neighbours)
 			{
-				find_w += rn->wayfarer_count;
+				for each(size_t wf in rn->wayfarers)
+				{
+					if (!wayfarer_finded[wf])
+					{
+						wayfarer_finded[wf] = true;
+						find_w++;
+					}
+				}
+
 				vstack.push_back(rn);
 			}
 		}
@@ -219,14 +252,14 @@ int main()
 		if (find_w == wayfarers_count)
 		{
 			size_t res = FindPathLength(&var_c);
-			cout << var_c.id() << ": res " << res << "; max " << max_res << endl;
+			cout << var_c.id() << "/" << component_vertices.size() << ": res " << res << "; max " << max_res << endl;
+
+			var_c.result = true;
+			var_c.result_length = res;
 
 			max_res = max(max_res, res);
 		}
 	}
-
-
-	//tarjan.printscr();
 
 	cout << max_res;
 

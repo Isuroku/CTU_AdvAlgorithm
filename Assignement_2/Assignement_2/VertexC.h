@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "Heap.h"
-#include "Vertex.h"
+#include "VertexT.h"
 
 using namespace std;
 
@@ -13,37 +13,36 @@ class CVertexC: public CHeapElem
 {
 public:
 	size_t _id;
-	size_t wayfarer_count;
 	size_t weight;
 	bool dest;
 	size_t _heap_index;
 	size_t wave_length;
+	
+	size_t _pid;
+	
+	size_t result_length;
+	bool result;
 
-	size_t get_wayfarer_count() const
-	{
-		size_t sum = 0;
-		for each (const CVertexT* v in included)
-			sum += v->wayfarer_count;
-
-		return sum;
-	};
+	size_t get_wayfarer_count() const { return wayfarers.size(); };
 
 	size_t get_weight() const { return included.size();	};
 
 	bool is_dest() const
 	{
 		for each (const CVertexT* v in included)
-			if (v->isDestination)
+			if (v->dest)
  				return true;
 		return false;
 	}
 
-	CVertexC() : _id(0), wayfarer_count(0), weight(1), dest(false), _heap_index(-1), wave_length(0) {}
+	CVertexC() : _id(0), weight(1), dest(false), _heap_index(-1), wave_length(0), _pid(0), result_length(0), result(false) {}
 
 	vector<CVertexC*> neighbours;
 	vector<CVertexC*> rear_neighbours;
 
 	vector<CVertexT*> included;
+
+	vector<size_t> wayfarers;
 
 	size_t id() const { return _id; }
 	void set_id(const size_t in_id) { _id = in_id; }
@@ -55,11 +54,6 @@ public:
 	bool check() const
 	{
 		bool res = true;
-		if(get_wayfarer_count() != wayfarer_count)
-		{
-			cerr << debug_info() << "wayfarer_count - error!" << endl;
-			res = false;
-		}
 		if (get_weight() != weight)
 		{
 			cerr << debug_info() << "weight - error!" << endl;

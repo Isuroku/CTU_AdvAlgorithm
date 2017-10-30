@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
-#include "Vertex.h"
+#include "VertexT.h"
 
 
 using namespace std;

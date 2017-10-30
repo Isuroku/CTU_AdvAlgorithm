@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vertex.h"
+#include "VertexT.h"
 #include "VertexC.h"
 
 using namespace std;
@@ -65,6 +65,8 @@ public:
 		{
 			CVertexC& var_c = out_component_vertices[i];
 
+			var_c._id = i + 1;
+
 			const vector<CVertexT*>& comp = inSCC.GetComponent(i);
 
 			var_c.weight = comp.size();
@@ -89,12 +91,13 @@ public:
 					}
 				}
 
-				var_c.wayfarer_count += var_t->wayfarer_count;
-				if (var_t->isDestination)
+				for each (int wfi in var_t->wayfarers)
+					var_c.wayfarers.push_back(wfi);
+
+				if (var_t->dest)
 					var_c.dest = true;
 
-				const size_t id = var_t->id();
-				var_c.set_id(id);
+				var_c._pid = var_t->id();
 			}
 		}
 	}

@@ -6,6 +6,7 @@
     <ClCompile Include="Tarjan.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="SimpleSCC.cpp" />
+    <ClCompile Include="save_txt_file.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOSwitcher.h" />
@@ -18,5 +19,7 @@
     <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="SimpleSCC.h" />
     <ClInclude Include="StronglyConnectedComponents.h" />
+    <ClInclude Include="save_txt_file.h" />
+    <ClInclude Include="VertexT.h" />
   </ItemGroup>
 </Project>

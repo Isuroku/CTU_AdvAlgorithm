@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Assignement2.cpp" />
+    <ClCompile Include="save_txt_file.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="IOSwitcher.cpp" />
     <ClCompile Include="SimpleSCC.cpp" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assignement2.h" />
+    <ClInclude Include="save_txt_file.h" />
     <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Heap.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="Tarjan.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="VertexC.h" />
+    <ClInclude Include="VertexT.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
