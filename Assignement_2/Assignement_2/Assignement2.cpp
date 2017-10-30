@@ -184,10 +184,6 @@ int main()
 	CTarjan tarjan;
 	tarjan.solve(vertices, false);
 
-	cout << 10;
-
-	return 0;
-
 #ifdef MY_TEST
 	if(!CStronglyConnectedComponents::compare_scc(tarjan, simple_scc))
 	{
@@ -201,6 +197,10 @@ int main()
 	vector<CVertexC> component_vertices(components_count_t);
 
 	CStronglyConnectedComponents::reduct_graph(static_cast<CStronglyConnectedComponents>(tarjan), component_vertices);
+
+	cout << 10;
+
+	return 0;
 
 #ifdef MY_TEST
 	if(!check_component_vertices(component_vertices, wayfarers_count))
