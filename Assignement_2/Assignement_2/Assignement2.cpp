@@ -25,21 +25,15 @@ const string arr_file_names[] =
 	"Pd/pub02.in", //3
 	"Pd/pub03.in", //8
 	"Pd/pub04.in", //8
-	"Pd/pub05.in", //16
-	"Pd/pub06.in", //82
+	"Pd/pub05.in", //16 
+	"Pd/pub06.in", //82 - 5
 	"Pd/pub07.in", //30
 	"Pd/pub08.in", //4417
 	"Pd/pub09.in", //5
-	"Pd/pub10.in",
+	"Pd/pub10.in", //131282
 };
 
-const int arr_file_res[] =
-{
-	15,
-	7,
-	1600933,
-	797967939
-};
+const int arr_file_res[] = { 3,	3, 8, 8, 16, 82, 30, 4417, 5, 131282 };
 
 void split(const string& instr, const string& delimeter, vector<string>& out_strings)
 {
@@ -112,7 +106,7 @@ bool check_component_vertices(const vector<CVertexC>& component_vertices, const 
 
 int main()
 {
-	int test_n = 4;
+	int test_n = 9;
 
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
@@ -164,7 +158,10 @@ int main()
 		V2.set_id(v2);
 
 		V1.neighbours.push_back(&V2);
+
+#ifdef MY_TEST
 		V2.rear_neighbours.push_back(&V1);
+#endif // MY_TEST
 
 		i++;
 	}
@@ -173,8 +170,10 @@ int main()
 	for each(int w_t_i in wayfarers_vertex)
 		vertices[w_t_i - 1].wayfarers.push_back(wayfarers_ids++);
 
+#ifdef MY_TEST
 	CSimpleSCC simple_scc;
 	simple_scc.solve(vertices);
+#endif //MY_TEST
 
 	/*CSaveGraph sg;
 	sg.save_txt_file(vertices, "out.grafa");
@@ -183,11 +182,13 @@ int main()
 	CTarjan tarjan;
 	tarjan.solve(vertices, false);
 
+#ifdef MY_TEST
 	if(!CStronglyConnectedComponents::compare_scc(tarjan, simple_scc))
 	{
 		cerr << "scc is wrong! out!" << endl;
 		return 1;
 	}
+#endif //MY_TEST
 
 	const size_t components_count_t = tarjan.GetComponentsCount();
 
@@ -195,11 +196,13 @@ int main()
 
 	CStronglyConnectedComponents::reduct_graph(static_cast<CStronglyConnectedComponents>(tarjan), component_vertices);
 
+#ifdef MY_TEST
 	if(!check_component_vertices(component_vertices, wayfarers_count))
 	{
 		cerr << "reduct scc is wrong! out!" << endl;
 		return 1;
 	}
+#endif //MY_TEST
 
 	/*CSaveGraph sg;
 	sg.save_txt_file(component_vertices, "out.grafa");
@@ -252,7 +255,10 @@ int main()
 		if (find_w == wayfarers_count)
 		{
 			size_t res = FindPathLength(&var_c);
+
+#ifdef MY_TEST
 			cout << var_c.id() << "/" << component_vertices.size() << ": res " << res << "; max " << max_res << endl;
+#endif //MY_TEST
 
 			var_c.result = true;
 			var_c.result_length = res;
@@ -263,6 +269,7 @@ int main()
 
 	cout << max_res;
 
-    return 0;
+	bool done = max_res == arr_file_res[test_n];
+    return done ? 0 : 1;
 }
 

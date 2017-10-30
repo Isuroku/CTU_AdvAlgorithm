@@ -4,6 +4,8 @@
 
 using namespace std;
 
+//#define MY_TEST (0)
+
 class CVertexT
 {
 

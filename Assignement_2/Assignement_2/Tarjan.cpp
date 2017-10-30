@@ -81,8 +81,15 @@ void CTarjan::check_vertex_collect_scc(CVertexT& v)
 				_scc.push_back(vector<CVertexT*>());
 
 			vector<CVertexT*>& comp = _scc[_curr_scc_index];
+
+#ifdef MY_TEST
 			comp.insert(lower_bound(comp.begin(), comp.end(), x), x);
-			//comp.push_back(x);
+#endif //MY_TEST
+
+#ifndef MY_TEST
+			comp.push_back(x);
+#endif //MY_TEST
+
 			x->comp_index = _curr_scc_index;
 
 		} while (x != &v);
@@ -127,18 +134,21 @@ void CTarjan::find_SCC2(CVertexT& v)
 		{
 			_curr.vertex()->lowlink = min(_curr.vertex()->lowlink, w->index);
 		}
-		else
+		else if(w == NULL)
 		{
+			if (!_stack.empty())
+			{
+				CStackInfo pred = _stack.top();
+				pred.vertex()->lowlink = min(pred.vertex()->lowlink, _curr.vertex()->lowlink);
+			}
+
 			check_vertex_collect_scc(*_curr.vertex());
 
 			if(_stack.empty())
 				_curr.reset();
 			else
 			{
-				CStackInfo pred = _stack.top();
-				pred.vertex()->lowlink = min(pred.vertex()->lowlink, _curr.vertex()->lowlink);
-
-				_curr = pred;
+				_curr = _stack.top();
 				_stack.pop();
 			}
 		}

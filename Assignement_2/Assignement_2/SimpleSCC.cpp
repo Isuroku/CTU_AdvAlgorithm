@@ -22,7 +22,8 @@ void get_topsort(CVertexT& v, vector<bool>& io_marked, deque<CVertexT*>& topsort
 	}
 
 	topsort.push_front(&v); // подсовываем v в начало topsort
-}
+}
+
 
 void get_component(CVertexT& v, vector<bool>& io_marked, vector<CVertexT*>& out_component, size_t comp_index)
 {
