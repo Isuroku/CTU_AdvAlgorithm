@@ -106,7 +106,7 @@ bool check_component_vertices(const vector<CVertexC>& component_vertices, const 
 
 int main()
 {
-	int test_n = 4;
+	int test_n = 8;
 
 	CIOSwitcher IOSwitcher(false, arr_file_names[test_n]);
 
@@ -260,9 +260,9 @@ int main()
 		{
 			size_t res = FindPathLength(&var_c);
 
-#ifdef MY_TEST
-			cout << var_c.id() << "/" << component_vertices.size() << ": res " << res << "; max " << max_res << endl;
-#endif //MY_TEST
+//#ifdef MY_TEST
+			cerr << var_c.id() << "/" << component_vertices.size() << ": res " << res << "; max " << max_res << endl;
+//#endif //MY_TEST
 
 			var_c.result = true;
 			var_c.result_length = res;
