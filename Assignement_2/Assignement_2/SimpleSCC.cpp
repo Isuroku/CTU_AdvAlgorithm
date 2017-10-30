@@ -55,7 +55,7 @@ void CSimpleSCC::solve(vector<CVertexT>& vertices)
 
 	vector<bool> marked = vector<bool>(vertices.size(), false); // все вершины не помечены
 
-	for (int v = 0; v < vertices.size(); v++)
+	for (size_t v = 0; v < vertices.size(); v++)
 	{
 		if (!marked[v])
 			get_topsort(vertices[v], marked, topsort);
@@ -63,7 +63,7 @@ void CSimpleSCC::solve(vector<CVertexT>& vertices)
 
 	marked = vector<bool>(vertices.size(), false);
 
-	for (int t = 0; t < topsort.size(); t++)
+	for (size_t t = 0; t < topsort.size(); t++)
 	{
 		CVertexT* v = topsort[t];
 		if (!marked[v->vec_index()])
