@@ -184,6 +184,10 @@ int main()
 	CTarjan tarjan;
 	tarjan.solve(vertices, false);
 
+	cout << 10;
+
+	return 0;
+
 #ifdef MY_TEST
 	if(!CStronglyConnectedComponents::compare_scc(tarjan, simple_scc))
 	{
