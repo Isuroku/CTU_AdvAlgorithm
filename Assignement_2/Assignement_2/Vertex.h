@@ -17,6 +17,8 @@ public:
 
 	size_t vec_index() const { return _id - 1; }
 
+	virtual string get_debuf_info() const { return string(""); }
+
 protected:
 	size_t _id;
 };

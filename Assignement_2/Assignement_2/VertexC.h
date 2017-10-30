@@ -7,6 +7,7 @@
 #include "Heap.h"
 #include "VertexT.h"
 #include <algorithm>
+#include "Vertex.h"
 
 using namespace std;
 
@@ -34,16 +35,22 @@ public:
 		{
 			return v->dest;
 		});
-		//for each (const CVertexT* v in included)
-		/*for_each(included.begin(), included.end(), [](const CVertexT* v)
-		{
-			if (v->dest)
-				return true;
-		});
-		return false;*/
 	}
 
 	CVertexC() : _id(0), weight(1), dest(false), _heap_index(-1), wave_length(0), _pid(0), result_length(0), result(false) {}
+
+	string get_debuf_info() const
+	{
+		stringstream lbl;
+
+		if (get_wayfarer_count() > 0)
+			lbl << get_wayfarer_count() << " WF ";
+
+		if (dest)
+			lbl << "Dest ";
+		
+		return lbl.str();
+	}
 
 	vector<CVertexC*> neighbours;
 	vector<CVertexC*> rear_neighbours;
@@ -54,6 +61,7 @@ public:
 
 	size_t id() const { return _id; }
 	void set_id(const size_t in_id) { _id = in_id; }
+	size_t vec_index() const { return _id - 1; }
 
 	float heap_weight() const override { return static_cast<float>(wave_length); }
 	void set_heap_index(const size_t index) override { _heap_index = index; }

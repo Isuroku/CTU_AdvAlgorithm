@@ -106,7 +106,7 @@ bool check_component_vertices(const vector<CVertexC>& component_vertices, const 
 
 int main()
 {
-	int test_n = 8;
+	int test_n = 4;
 
 	CIOSwitcher IOSwitcher(false, arr_file_names[test_n]);
 
@@ -182,7 +182,7 @@ int main()
 	return 0;*/
 	
 	CTarjan tarjan;
-	tarjan.solve(vertices, false);
+	tarjan.solve(vertices, true);
 
 #ifdef MY_TEST
 	if(!CStronglyConnectedComponents::compare_scc(tarjan, simple_scc))
@@ -198,9 +198,6 @@ int main()
 
 	CStronglyConnectedComponents::reduct_graph(static_cast<CStronglyConnectedComponents>(tarjan), component_vertices);
 
-	cout << 10;
-
-	return 0;
 
 #ifdef MY_TEST
 	if(!check_component_vertices(component_vertices, wayfarers_count))
@@ -211,7 +208,7 @@ int main()
 #endif //MY_TEST
 
 	/*CSaveGraph sg;
-	sg.save_txt_file(component_vertices, "out.grafa");
+	sg.save_txt_file<CVertexC>(component_vertices, "out.grafa");
 	return 0;*/
 
 	deque<CVertexC*> vstack;
@@ -264,9 +261,9 @@ int main()
 		{
 			size_t res = FindPathLength(&var_c);
 
-//#ifdef MY_TEST
+#ifdef MY_TEST
 			cerr << var_c.id() << "/" << component_vertices.size() << ": res " << res << "; max " << max_res << endl;
-//#endif //MY_TEST
+#endif //MY_TEST
 
 			var_c.result = true;
 			var_c.result_length = res;
