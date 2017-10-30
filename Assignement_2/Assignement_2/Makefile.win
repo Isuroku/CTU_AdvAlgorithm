@@ -1,0 +1,43 @@
+# Project: Assignement_2
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = Assignement2.o Dijkstra.o IOSwitcher.o save_txt_file.o SimpleSCC.o Tarjan.o
+LINKOBJ  = Assignement2.o Dijkstra.o IOSwitcher.o save_txt_file.o SimpleSCC.o Tarjan.o
+LIBS     = -L"F:/Dev-Cpp/MinGW64/lib" -L"F:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
+INCS     = -I"F:/Dev-Cpp/MinGW64/include" -I"F:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"F:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"F:/Dev-Cpp/MinGW64/include" -I"F:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"F:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"F:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+BIN      = Assignement_2.exe
+CXXFLAGS = $(CXXINCS) -std=c++11
+CFLAGS   = $(INCS) -std=c++11
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+Assignement2.o: Assignement2.cpp
+	$(CPP) -c Assignement2.cpp -o Assignement2.o $(CXXFLAGS)
+
+Dijkstra.o: Dijkstra.cpp
+	$(CPP) -c Dijkstra.cpp -o Dijkstra.o $(CXXFLAGS)
+
+IOSwitcher.o: IOSwitcher.cpp
+	$(CPP) -c IOSwitcher.cpp -o IOSwitcher.o $(CXXFLAGS)
+
+save_txt_file.o: save_txt_file.cpp
+	$(CPP) -c save_txt_file.cpp -o save_txt_file.o $(CXXFLAGS)
+
+SimpleSCC.o: SimpleSCC.cpp
+	$(CPP) -c SimpleSCC.cpp -o SimpleSCC.o $(CXXFLAGS)
+
+Tarjan.o: Tarjan.cpp
+	$(CPP) -c Tarjan.cpp -o Tarjan.o $(CXXFLAGS)

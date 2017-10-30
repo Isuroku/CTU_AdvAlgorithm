@@ -52,7 +52,8 @@ void CTarjan::find_SCC(CVertexT& v)
 	v.index = v.lowlink = ++_index;
 	push(v);
 
-	for each (CVertexT* w in v.neighbours)
+	//for each (CVertexT* w in v.neighbours)
+	for_each(v.neighbours.begin(), v.neighbours.end(), [this, &v](CVertexT* w)
 	{
 		if(w->index == 0)
 		{
@@ -63,7 +64,7 @@ void CTarjan::find_SCC(CVertexT& v)
 		{
 			v.lowlink = min(v.lowlink, w->index);
 		}
-	} 
+	});
 
 	check_vertex_collect_scc(v);
 }
@@ -100,14 +101,16 @@ void CTarjan::check_vertex_collect_scc(CVertexT& v)
 
 void CTarjan::printscr() const
 {
-	for each(vector<CVertexT*> vec in _scc)
+	//for each(vector<CVertexT*> vec in _scc)
+	for_each(_scc.begin(), _scc.end(), [](const vector<CVertexT*>& vec)
 	{
-		for each(CVertexT* v in vec)
+		//for each(CVertexT* v in vec)
+		for_each(vec.begin(), vec.end(), [](const CVertexT* v)
 		{
 			cout << v->id() << " ";
-		}
+		});
 		cout << endl;
-	}
+	});
 }
 
 CTarjan::CStackInfo CTarjan::set_curr(CVertexT* v)

@@ -91,8 +91,7 @@ public:
 					}
 				}
 
-				for each (int wfi in var_t->wayfarers)
-					var_c.wayfarers.push_back(wfi);
+				var_c.wayfarers.insert(var_c.wayfarers.end(), var_t->wayfarers.begin(), var_t->wayfarers.end());
 
 				if (var_t->dest)
 					var_c.dest = true;

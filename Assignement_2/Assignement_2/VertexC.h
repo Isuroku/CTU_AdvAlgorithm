@@ -6,6 +6,7 @@
 #include <vector>
 #include "Heap.h"
 #include "VertexT.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -29,10 +30,17 @@ public:
 
 	bool is_dest() const
 	{
-		for each (const CVertexT* v in included)
+		return any_of(included.begin(), included.end(), [](const CVertexT* v)
+		{
+			return v->dest;
+		});
+		//for each (const CVertexT* v in included)
+		/*for_each(included.begin(), included.end(), [](const CVertexT* v)
+		{
 			if (v->dest)
- 				return true;
-		return false;
+				return true;
+		});
+		return false;*/
 	}
 
 	CVertexC() : _id(0), weight(1), dest(false), _heap_index(-1), wave_length(0), _pid(0), result_length(0), result(false) {}

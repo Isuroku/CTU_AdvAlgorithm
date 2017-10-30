@@ -15,7 +15,7 @@ struct SWeightComp
 class CHeapElem
 {
 public:
-	virtual ~CHeapElem() = default;
+	virtual ~CHeapElem() {};
 
 	virtual float heap_weight() const = 0;
 	virtual void set_heap_index(const size_t index) = 0;

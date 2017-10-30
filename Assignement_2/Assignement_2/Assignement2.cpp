@@ -106,7 +106,7 @@ bool check_component_vertices(const vector<CVertexC>& component_vertices, const 
 
 int main()
 {
-	int test_n = 9;
+	int test_n = 4;
 
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
@@ -167,8 +167,10 @@ int main()
 	}
 
 	size_t wayfarers_ids = 0;
-	for each(int w_t_i in wayfarers_vertex)
+	for_each(wayfarers_vertex.begin(), wayfarers_vertex.end(), [&wayfarers_ids, &vertices](int w_t_i)
+	{
 		vertices[w_t_i - 1].wayfarers.push_back(wayfarers_ids++);
+	});
 
 #ifdef MY_TEST
 	CSimpleSCC simple_scc;
@@ -221,14 +223,15 @@ int main()
 		CVertexC& var_c = component_vertices[i];
 		size_t find_w = 0;
 		
-		for each(size_t wf in var_c.wayfarers)
+		//for each(size_t wf in var_c.wayfarers)
+		for_each(var_c.wayfarers.begin(), var_c.wayfarers.end(), [&find_w, &wayfarer_finded](size_t wf)
 		{
 			if (!wayfarer_finded[wf])
 			{
 				wayfarer_finded[wf] = true;
 				find_w++;
 			}
-		}
+		});
 
 		vstack.push_back(&var_c);
 
@@ -237,19 +240,20 @@ int main()
 			CVertexC* v = vstack.back();
 			vstack.pop_back();
 
-			for each(CVertexC* rn in v->rear_neighbours)
+			//for each(CVertexC* rn in v->rear_neighbours)
+			for_each(v->rear_neighbours.begin(), v->rear_neighbours.end(), [&find_w, &wayfarer_finded, &vstack](CVertexC* rn)
 			{
-				for each(size_t wf in rn->wayfarers)
+				for_each(rn->wayfarers.begin(), rn->wayfarers.end(), [&find_w, &wayfarer_finded](size_t wf)
 				{
 					if (!wayfarer_finded[wf])
 					{
 						wayfarer_finded[wf] = true;
 						find_w++;
 					}
-				}
+				});
 
 				vstack.push_back(rn);
-			}
+			});
 		}
 
 		if (find_w == wayfarers_count)
