@@ -33,7 +33,7 @@ const string arr_file_names[] =
 	"Pd/pub10.in", //131282
 };
 
-const int arr_file_res[] = { 3,	3, 8, 8, 16, 82, 30, 4417, 5, 131282 };
+const size_t arr_file_res[] = { 3,	3, 8, 8, 16, 82, 30, 4417, 5, 131282 };
 
 void split(const string& instr, const string& delimeter, vector<string>& out_strings)
 {
@@ -108,14 +108,14 @@ int main()
 {
 	int test_n = 4;
 
-	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
+	CIOSwitcher IOSwitcher(false, arr_file_names[test_n]);
 
 	string line;
 
 	IOSwitcher.getline(line);
-	int vertex_count, edge_count, wayfarers_count, destination_index;
+	size_t vertex_count, edge_count, wayfarers_count, destination_index;
 
-	if (sscanf(line.c_str(), "%d %d %d %d", &vertex_count, &edge_count, &wayfarers_count, &destination_index) != 4)
+	if (sscanf(line.c_str(), "%zu %zu %zu %zu", &vertex_count, &edge_count, &wayfarers_count, &destination_index) != 4)
 	{
 		cerr << "read first line was wrong!";
 		return 1;
