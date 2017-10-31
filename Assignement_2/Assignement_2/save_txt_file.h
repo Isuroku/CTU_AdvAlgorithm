@@ -2,6 +2,7 @@
 #include <vector>
 #include "Vertex.h"
 #include <fstream>
+#include <math.h>
 
 class CSaveGraph
 {

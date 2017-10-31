@@ -106,7 +106,7 @@ bool check_component_vertices(const vector<CVertexC>& component_vertices, const 
 
 int main()
 {
-	int test_n = 4;
+	const int test_n = 9;
 
 	CIOSwitcher IOSwitcher(false, arr_file_names[test_n]);
 
@@ -182,7 +182,7 @@ int main()
 	return 0;*/
 	
 	CTarjan tarjan;
-	tarjan.solve(vertices, true);
+	tarjan.solve(vertices, false);
 
 #ifdef MY_TEST
 	if(!CStronglyConnectedComponents::compare_scc(tarjan, simple_scc))
@@ -196,7 +196,7 @@ int main()
 
 	vector<CVertexC> component_vertices(components_count_t);
 
-	CStronglyConnectedComponents::reduct_graph(static_cast<CStronglyConnectedComponents>(tarjan), component_vertices);
+	CVertexC* vdest = CStronglyConnectedComponents::reduct_graph(static_cast<CStronglyConnectedComponents>(tarjan), component_vertices);
 
 
 #ifdef MY_TEST
@@ -207,74 +207,79 @@ int main()
 	}
 #endif //MY_TEST
 
-	/*CSaveGraph sg;
-	sg.save_txt_file<CVertexC>(component_vertices, "out.grafa");
-	return 0;*/
+	//CSaveGraph sg;
+	//sg.save_txt_file<CVertexC>(component_vertices, "out.grafa");
+	//return 0;
 
-	deque<CVertexC*> vstack;
+	const size_t max_res = FindDFS(vdest, components_count_t, wayfarers_count);
 
-	size_t max_res = 0;
+//	deque<CVertexC*> vstack;
+//
 
-	for (size_t i = 0; i < component_vertices.size(); i++)
-	{
-		vstack.clear();
-
-		vector<size_t> wayfarer_finded(wayfarers_count, false);
-
-		CVertexC& var_c = component_vertices[i];
-		size_t find_w = 0;
-		
-		//for each(size_t wf in var_c.wayfarers)
-		for_each(var_c.wayfarers.begin(), var_c.wayfarers.end(), [&find_w, &wayfarer_finded](size_t wf)
-		{
-			if (!wayfarer_finded[wf])
-			{
-				wayfarer_finded[wf] = true;
-				find_w++;
-			}
-		});
-
-		vstack.push_back(&var_c);
-
-		while(!vstack.empty() && find_w < wayfarers_count)
-		{
-			CVertexC* v = vstack.back();
-			vstack.pop_back();
-
-			//for each(CVertexC* rn in v->rear_neighbours)
-			for_each(v->rear_neighbours.begin(), v->rear_neighbours.end(), [&find_w, &wayfarer_finded, &vstack](CVertexC* rn)
-			{
-				for_each(rn->wayfarers.begin(), rn->wayfarers.end(), [&find_w, &wayfarer_finded](size_t wf)
-				{
-					if (!wayfarer_finded[wf])
-					{
-						wayfarer_finded[wf] = true;
-						find_w++;
-					}
-				});
-
-				vstack.push_back(rn);
-			});
-		}
-
-		if (find_w == wayfarers_count)
-		{
-			size_t res = FindPathLength(&var_c);
-
-#ifdef MY_TEST
-			cerr << var_c.id() << "/" << component_vertices.size() << ": res " << res << "; max " << max_res << endl;
-#endif //MY_TEST
-
-			var_c.result = true;
-			var_c.result_length = res;
-
-			max_res = max(max_res, res);
-		}
-	}
+//
+//	for (size_t i = 0; i < component_vertices.size(); i++)
+//	{
+//		vstack.clear();
+//
+//		vector<size_t> wayfarer_finded(wayfarers_count, false);
+//
+//		CVertexC& var_c = component_vertices[i];
+//		size_t find_w = 0;
+//		
+//		//for each(size_t wf in var_c.wayfarers)
+//		for_each(var_c.wayfarers.begin(), var_c.wayfarers.end(), [&find_w, &wayfarer_finded](size_t wf)
+//		{
+//			if (!wayfarer_finded[wf])
+//			{
+//				wayfarer_finded[wf] = true;
+//				find_w++;
+//			}
+//		});
+//
+//		vstack.push_back(&var_c);
+//
+//		while(!vstack.empty() && find_w < wayfarers_count)
+//		{
+//			CVertexC* v = vstack.back();
+//			vstack.pop_back();
+//
+//			//for each(CVertexC* rn in v->rear_neighbours)
+//			for_each(v->rear_neighbours.begin(), v->rear_neighbours.end(), [&find_w, &wayfarer_finded, &vstack](CVertexC* rn)
+//			{
+//				for_each(rn->wayfarers.begin(), rn->wayfarers.end(), [&find_w, &wayfarer_finded](size_t wf)
+//				{
+//					if (!wayfarer_finded[wf])
+//					{
+//						wayfarer_finded[wf] = true;
+//						find_w++;
+//					}
+//				});
+//
+//				vstack.push_back(rn);
+//			});
+//		}
+//
+//		if (find_w == wayfarers_count)
+//		{
+//			size_t res = FindPathLength(&var_c, component_vertices.size());
+//
+//#ifdef MY_TEST
+//			cerr << var_c.id() << "/" << component_vertices.size() << ": res " << res << "; max " << max_res << endl;
+//#endif //MY_TEST
+//
+//			if (var_c.state != vsClosed)
+//			{
+//				var_c.state = vsPassed;
+//				var_c.result_length = res;
+//			}
+//
+//			max_res = max(max_res, res);
+//		}
+//	}
 
 	cout << max_res;
 
-	bool done = max_res == arr_file_res[test_n];
+	const bool done = max_res == arr_file_res[test_n];
     return done ? 0 : 1;
 }
 

@@ -57,8 +57,10 @@ public:
 		return res;
 	}
 
-	static void reduct_graph(const CStronglyConnectedComponents& inSCC, vector<CVertexC>& out_component_vertices)
+	static CVertexC* reduct_graph(const CStronglyConnectedComponents& inSCC, vector<CVertexC>& out_component_vertices)
 	{
+		CVertexC* vdest = NULL;
+
 		out_component_vertices.resize(inSCC.GetComponentsCount());
 
 		for (size_t i = 0; i < out_component_vertices.size(); i++)
@@ -85,7 +87,7 @@ public:
 						CVertexC& cn = out_component_vertices[n_comp_index];
 						if (find(var_c.neighbours.begin(), var_c.neighbours.end(), &cn) == var_c.neighbours.end())
 						{
-							var_c.neighbours.push_back(&cn);
+							var_c.neighbours.insert(lower_bound(var_c.neighbours.begin(), var_c.neighbours.end(), &cn), &cn);
 							cn.rear_neighbours.push_back(&var_c);
 						}
 					}
@@ -94,12 +96,18 @@ public:
 				var_c.wayfarers.insert(var_c.wayfarers.end(), var_t->wayfarers.begin(), var_t->wayfarers.end());
 
 				if (var_t->dest)
+				{
 					var_c.dest = true;
+					vdest = &var_c;
+				}
 
 				var_c._pid = var_t->id();
 			}
 		}
+
+		return vdest;
 	}
+
 
 protected:
 	vector<vector<CVertexT*>> _scc;

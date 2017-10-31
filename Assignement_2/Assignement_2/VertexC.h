@@ -11,6 +11,8 @@
 
 using namespace std;
 
+enum EVertexState { vsClear, vsPassed, vsClosed };
+
 class CVertexC: public CHeapElem
 {
 public:
@@ -23,7 +25,7 @@ public:
 	size_t _pid;
 	
 	size_t result_length;
-	bool result;
+	EVertexState state;
 
 	size_t get_wayfarer_count() const { return wayfarers.size(); };
 
@@ -37,7 +39,7 @@ public:
 		});
 	}
 
-	CVertexC() : _id(0), weight(1), dest(false), _heap_index(-1), wave_length(0), _pid(0), result_length(0), result(false) {}
+	CVertexC() : _id(0), weight(1), dest(false), _heap_index(-1), wave_length(0), _pid(0), result_length(0), state(vsClear) {}
 
 	string get_debuf_info() const
 	{
