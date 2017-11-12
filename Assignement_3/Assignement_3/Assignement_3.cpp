@@ -9,28 +9,27 @@
 
 const string arr_file_names[] =
 {
-	"Pd/pub01.in", //3
-	"Pd/pub02.in", //3
-	"Pd/pub03.in", //8
-	"Pd/pub04.in", //8
-	"Pd/pub05.in", //16 
-	"Pd/pub06.in", //82 - 5
-	"Pd/pub07.in", //30
-	"Pd/pub08.in", //4417
-	"Pd/pub09.in", //5
-	"Pd/pub10.in", //131282
+	"Pd/pub01.in", //1 2
+	"Pd/pub02.in", //1 1
+	"Pd/pub03.in", //3
+	"Pd/pub04.in", //1 2 2
+	"Pd/pub05.in", //3 5 
+	"Pd/pub06.in", //2 4 4 5
+	"Pd/pub07.in", //31 39
+	"Pd/pub08.in", //5 7 10 12 12 14
+	"Pd/pub09.in", //1 2 2 2 2 3 3 4 5 6
+	"Pd/pub10.in", //4 6 6 8 11 12 14 14 17 18
 };
 
-bool ReadSources(const bool inSaveGraphToFile, vector<vector<CVertex>>& outAllData)
+bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<CVertex>>& outAllData)
 {
-	const int test_n = 0;
 	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
 
 	string line;
 	IOSwitcher.getline(line);
-	size_t molecule_count, vertex_count, edge_count;
+	int molecule_count, vertex_count, edge_count;
 
-	if (sscanf(line.c_str(), "%zu %zu %zu", &vertex_count, &edge_count, &molecule_count) != 3)
+	if (sscanf(line.c_str(), "%d %d %d", &vertex_count, &edge_count, &molecule_count) != 3)
 	{
 		cerr << "read first line was wrong!";
 		return false;
@@ -40,17 +39,17 @@ bool ReadSources(const bool inSaveGraphToFile, vector<vector<CVertex>>& outAllDa
 
 	CGraphSaver sg;
 
-	for (size_t m = 0; m < molecule_count; m++)
+	for (size_t m = 0; m < static_cast<size_t>(molecule_count); m++)
 	{
 		vector<CVertex>& mol_vec = outAllData[m];
 		mol_vec.resize(vertex_count);
 
-		for (size_t e = 0; e < edge_count; e++)
+		for (size_t e = 0; e < static_cast<size_t>(edge_count); e++)
 		{
 			IOSwitcher.getline(line);
 
-			size_t ind1, ind2;
-			if (sscanf(line.c_str(), "%zu %zu", &ind1, &ind2) != 2)
+			int ind1, ind2;
+			if (sscanf(line.c_str(), "%d %d", &ind1, &ind2) != 2)
 			{
 				cerr << "read " << m * molecule_count + e + 1 << " line was wrong!";
 				return false;
@@ -143,13 +142,10 @@ void InsertNewCert(const string& inCert, vector<SMolClasses>& outResult)
 int main()
 {
 	vector<vector<CVertex>> molecules;
-	if (!ReadSources(false, molecules))
+	if (!ReadSources(9, false, molecules))
 		return 1;
 
 	vector<SMolClasses> result;
-
-	//vector<CVertex*> tree1;
-	//vector<CVertex*> tree2;
 
 	vector<size_t> indices;
 	vector<vector<CVertex*>> childs;
@@ -158,6 +154,8 @@ int main()
 	{
 		childs.resize(mol.size());
 		indices.clear();
+
+		for_each(mol.begin(), mol.end(), [](CVertex& v) { v.CollapseTriangle(); });
 
 		CollectChilds(mol, childs, indices);
 
