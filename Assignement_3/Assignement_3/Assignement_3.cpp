@@ -23,10 +23,15 @@ const string arr_file_names[] =
 
 bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<CVertex>>& outAllData)
 {
+	cerr << "Start read"<< endl;
+
 	CIOSwitcher IOSwitcher(test_n >= 0, arr_file_names[test_n]);
 
 	string line;
 	IOSwitcher.getline(line);
+
+	cerr << "Line 1" << line << endl;
+
 	int molecule_count, vertex_count, edge_count;
 
 	if (sscanf(line.c_str(), "%i %i %i", &vertex_count, &edge_count, &molecule_count) != 3)
