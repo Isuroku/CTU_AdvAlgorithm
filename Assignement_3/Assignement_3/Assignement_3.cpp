@@ -145,6 +145,8 @@ int main()
 	if (!ReadSources(-1, false, molecules))
 		return 1;
 
+	return 0;
+
 	vector<SMolClasses> result;
 
 	vector<size_t> indices;
