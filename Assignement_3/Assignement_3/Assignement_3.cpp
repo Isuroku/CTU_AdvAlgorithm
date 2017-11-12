@@ -23,7 +23,7 @@ const string arr_file_names[] =
 
 bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<CVertex>>& outAllData)
 {
-	CIOSwitcher IOSwitcher(true, arr_file_names[test_n]);
+	CIOSwitcher IOSwitcher(test_n >= 0, arr_file_names[test_n]);
 
 	string line;
 	IOSwitcher.getline(line);
@@ -142,7 +142,7 @@ void InsertNewCert(const string& inCert, vector<SMolClasses>& outResult)
 int main()
 {
 	vector<vector<CVertex>> molecules;
-	if (!ReadSources(9, false, molecules))
+	if (!ReadSources(-1, false, molecules))
 		return 1;
 
 	vector<SMolClasses> result;
