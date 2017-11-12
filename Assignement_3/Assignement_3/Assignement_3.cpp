@@ -146,7 +146,7 @@ void InsertNewCert(const string& inCert, vector<SMolClasses>& outResult)
 int main()
 {
 	vector<vector<CVertex>> molecules;
-	if (!ReadSources(0, false, molecules))
+	if (!ReadSources(-1, false, molecules))
 		return 1;
 
 	return 0;
