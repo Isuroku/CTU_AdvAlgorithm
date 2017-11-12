@@ -29,15 +29,17 @@ bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<C
 	IOSwitcher.getline(line);
 	int molecule_count, vertex_count, edge_count;
 
-	if (sscanf(line.c_str(), "%d %d %d", &vertex_count, &edge_count, &molecule_count) != 3)
+	if (sscanf(line.c_str(), "%i %i %i", &vertex_count, &edge_count, &molecule_count) != 3)
 	{
 		cerr << "read first line was wrong!";
 		return false;
 	}
 
+	cerr << "vertex_count " << vertex_count << " edge_count " << edge_count << " molecule_count " << molecule_count << endl;
+
 	outAllData.resize(molecule_count);
 
-	CGraphSaver sg;
+	//CGraphSaver sg;
 
 	for (size_t m = 0; m < static_cast<size_t>(molecule_count); m++)
 	{
@@ -49,11 +51,13 @@ bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<C
 			IOSwitcher.getline(line);
 
 			int ind1, ind2;
-			if (sscanf(line.c_str(), "%d %d", &ind1, &ind2) != 2)
+			if (sscanf(line.c_str(), "%i %i", &ind1, &ind2) != 2)
 			{
 				cerr << "read " << m * molecule_count + e + 1 << " line was wrong!";
 				return false;
 			}
+
+			cerr << "ind1 " << ind1 << " ind2 " << ind2 << endl;
 
 			CVertex& v1 = mol_vec[ind1 - 1];
 			v1.set_id(ind1);
@@ -64,12 +68,12 @@ bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<C
 			v2.neighbours.push_back(&v1);
 		}
 
-		if (inSaveGraphToFile)
+		/*if (inSaveGraphToFile)
 		{
 			stringstream lbl;
 			lbl << "m" << m << ".grafa";
 			sg.save_txt_file(mol_vec, lbl.str());
-		}
+		}*/
 	}
 	return true;
 }
@@ -142,7 +146,7 @@ void InsertNewCert(const string& inCert, vector<SMolClasses>& outResult)
 int main()
 {
 	vector<vector<CVertex>> molecules;
-	if (!ReadSources(-1, false, molecules))
+	if (!ReadSources(0, false, molecules))
 		return 1;
 
 	return 0;
