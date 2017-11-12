@@ -23,14 +23,19 @@ const string arr_file_names[] =
 
 bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<CVertex>>& outAllData)
 {
-	cerr << "Start read"<< endl;
+	//cerr << "Start read"<< endl;
 
-	CIOSwitcher IOSwitcher(test_n >= 0, arr_file_names[test_n]);
+	string fn = "";
+	const bool from_file = test_n >= 0 && test_n < arr_file_names->length();
+	if(from_file)
+		fn = arr_file_names[test_n];
+
+	CIOSwitcher IOSwitcher(from_file, fn);
 
 	string line;
 	IOSwitcher.getline(line);
 
-	cerr << "Line 1" << line << endl;
+	//cerr << "Line 1" << line << endl;
 
 	int molecule_count, vertex_count, edge_count;
 
@@ -40,7 +45,7 @@ bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<C
 		return false;
 	}
 
-	cerr << "vertex_count " << vertex_count << " edge_count " << edge_count << " molecule_count " << molecule_count << endl;
+	//cerr << "vertex_count " << vertex_count << " edge_count " << edge_count << " molecule_count " << molecule_count << endl;
 
 	outAllData.resize(molecule_count);
 
@@ -62,7 +67,7 @@ bool ReadSources(const int test_n, const bool inSaveGraphToFile, vector<vector<C
 				return false;
 			}
 
-			cerr << "ind1 " << ind1 << " ind2 " << ind2 << endl;
+			//cerr << "ind1 " << ind1 << " ind2 " << ind2 << endl;
 
 			CVertex& v1 = mol_vec[ind1 - 1];
 			v1.set_id(ind1);
@@ -154,7 +159,7 @@ int main()
 	if (!ReadSources(-1, false, molecules))
 		return 1;
 
-	return 0;
+	//return 0;
 
 	vector<SMolClasses> result;
 
