@@ -60,8 +60,8 @@ vector<vector<size_t>> _matrix;
 int levenshtein_distance(const string& src, const string& dst, const size_t dst_len)
 {
 	const SStringPart part(dst, dst_len);
-	//if (_cache_dist.find(part) != _cache_dist.end())
-	//	return _cache_dist[part];
+	if (_cache_dist.find(part) != _cache_dist.end())
+		return _cache_dist[part];
 
 	const size_t m = str_len(src);
 	const size_t n = min(dst_len, str_len(dst));
@@ -105,32 +105,32 @@ map<string, int> _cache;
 
 char _str_buf[4096];
 
-void DebugLog(const string& str)
-{
-	cerr << str << endl;
-}
-
-void DebugLog(const string& pattern, const int change_count)
-{
-	if(change_count < 2)
-		cerr << _str_buf << endl;
-}
+//void DebugLog(const string& str)
+//{
+//	cerr << str << endl;
+//}
+//
+//void DebugLog(const string& pattern, const int change_count)
+//{
+//	if(change_count < 2)
+//		cerr << _str_buf << endl;
+//}
 
 int find_max_length_train2(const string& pattern, const int change_count, bool max_select, const string& formation)
 {
-	DebugLog(formation);
+	//DebugLog(formation);
 	const size_t formation_len = str_len(formation);
 	if (formation_len == 0)
 		return 0;
-	//if (_cache.find(formation) != _cache.end())
-		//return _cache[formation];
+	if (_cache.find(formation) != _cache.end())
+		return _cache[formation];
 
 	int max_value = max_select ? INT_MAX - 1: INT_MIN + 1;
 	const size_t pattern_len = str_len(pattern);
 	const size_t min_str_len = pattern_len - change_count;
 
-	snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d, pattern_len %d, change_count %d, formation_len %d", min_str_len, pattern_len, change_count, formation_len);
-	DebugLog(_str_buf);
+	//snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d, pattern_len %d, change_count %d, formation_len %d", min_str_len, pattern_len, change_count, formation_len);
+	//DebugLog(_str_buf);
 
 	if (formation_len < min_str_len)
 		return max_value;
@@ -138,16 +138,16 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 	size_t max_str_len = pattern_len + change_count;
 	max_str_len = min(max_str_len, formation_len);
 
-	snprintf(_str_buf, sizeof(_str_buf), "max_str_len: %d", max_str_len);
-	DebugLog(_str_buf);
+	//snprintf(_str_buf, sizeof(_str_buf), "max_str_len: %d", max_str_len);
+	//DebugLog(_str_buf);
 
 	for(size_t i = min_str_len; i <= max_str_len; ++i)
 	{
 		const int d = levenshtein_distance(pattern, formation, i);
 		if (d <= change_count)
 		{
-			snprintf(_str_buf, sizeof(_str_buf), "levenshtein_distance: %d", d);
-			DebugLog(_str_buf);
+			//snprintf(_str_buf, sizeof(_str_buf), "levenshtein_distance: %d", d);
+			//DebugLog(_str_buf);
 			const string sunstring = formation.substr(i, formation_len - i);
 			const int child_res = find_max_length_train2(pattern, change_count, max_select, sunstring);
 			if ((max_select && (child_res < max_value)) || (!max_select && (child_res > max_value)))
@@ -195,16 +195,16 @@ int main()
 	string formation;
 	IOSwitcher.getline(formation);
 	formation = trim(formation);
-	cerr << formation << endl;
-	for(size_t i = 0; i < formation.size(); ++i)
-		cerr << std::hex << (int)formation[i] << endl;
+	//cerr << formation << endl;
+	/*for(size_t i = 0; i < formation.size(); ++i)
+		cerr << std::hex << (int)formation[i] << endl;*/
 
 	string pattern;
 	IOSwitcher.getline(pattern);
 	pattern = trim(pattern);
-	cerr << pattern << endl;
-	for (size_t i = 0; i < pattern.size(); ++i)
-		cerr << std::hex << (int)pattern[i] << endl;
+	//cerr << pattern << endl;
+	//for (size_t i = 0; i < pattern.size(); ++i)
+	//	cerr << std::hex << (int)pattern[i] << endl;
 
 	string s_change_count;
 	IOSwitcher.getline(s_change_count);
@@ -215,8 +215,8 @@ int main()
 		return 1;
 	}
 
-	if (change_count > 1)
-		return 1;
+	/*if (change_count > 1)
+		return 1;*/
 
 	//test(pattern);
 
