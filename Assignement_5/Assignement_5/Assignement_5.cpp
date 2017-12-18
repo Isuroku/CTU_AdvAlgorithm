@@ -41,7 +41,7 @@ struct StringPartCmp
 {
 	bool operator()(const SStringPart& lhs, const SStringPart& rhs) const
 	{
-		const int cmp_res = strcmpi(lhs.string_value.c_str(), rhs.string_value.c_str());
+		const int cmp_res = strcmp(lhs.string_value.c_str(), rhs.string_value.c_str());
 		if (cmp_res == 0)
 			return lhs.length < rhs.length;
 		return cmp_res < 0;
