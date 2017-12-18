@@ -101,8 +101,8 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 	const size_t formation_len = formation.size();
 	if (formation_len == 0)
 		return 0;
-	if (_cache.find(formation) != _cache.end())
-		return _cache[formation];
+	//if (_cache.find(formation) != _cache.end())
+		//return _cache[formation];
 
 	int max_value = max_select ? INT_MAX - 1: INT_MIN + 1;
 	const size_t pattern_len = pattern.length();
@@ -172,7 +172,7 @@ int find_min_length_train2(const string& pattern, const int change_count, const 
 int main()
 {
 	string fn = "";
-	const int test_n = -1;
+	const int test_n = 1;
 	const bool from_file = test_n >= 0 && test_n < static_cast<int>(arr_file_names->length());
 	if (from_file)
 		fn = arr_file_names[test_n];
