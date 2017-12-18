@@ -103,9 +103,10 @@ void DebugLog(const string& str)
 	cerr << str << endl;
 }
 
-void DebugLog()
+void DebugLog(const string& pattern, const int change_count)
 {
-	cerr << _str_buf << endl;
+	if(change_count < 2)
+		cerr << _str_buf << endl;
 }
 
 int find_max_length_train2(const string& pattern, const int change_count, bool max_select, const string& formation)
