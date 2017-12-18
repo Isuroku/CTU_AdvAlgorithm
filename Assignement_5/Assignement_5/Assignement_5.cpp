@@ -28,7 +28,7 @@ size_t str_len(const string& pattern)
 {
 	if (pattern.empty())
 		return 0;
-	return pattern.size();
+	return pattern.size() - 1;
 }
 
 struct SStringPart
