@@ -175,7 +175,7 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 string trim(const string& str)
 {
 	string s = str;
-	while(!s.empty() && s[s.length() - 1] == ' ')
+	while(!s.empty() && (s[s.length() - 1] == ' ' || s[s.length() - 1] == '\n' || s[s.length() - 1] == '\r'))
 	{
 		s = s.substr(0, s.length() - 1);
 	}
