@@ -122,14 +122,17 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 	const size_t pattern_len = pattern.length();
 	const size_t min_str_len = pattern_len - change_count;
 
-	//snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d", min_str_len);
-	//DebugLog(_str_buf);
+	snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d", min_str_len);
+	DebugLog(_str_buf);
 
 	if (formation.size() < min_str_len)
 		return max_value;
 
 	size_t max_str_len = pattern_len + change_count;
 	max_str_len = min(max_str_len, formation_len);
+
+	snprintf(_str_buf, sizeof(_str_buf), "max_str_len: %d", max_str_len);
+	DebugLog(_str_buf);
 
 	for(size_t i = min_str_len; i <= max_str_len; ++i)
 	{
@@ -191,7 +194,7 @@ int find_min_length_train2(const string& pattern, const int change_count, const 
 int main()
 {
 	string fn = "";
-	const int test_n = -1;
+	const int test_n = 0;
 	const bool from_file = test_n >= 0 && test_n < static_cast<int>(arr_file_names->length());
 	if (from_file)
 		fn = arr_file_names[test_n];
