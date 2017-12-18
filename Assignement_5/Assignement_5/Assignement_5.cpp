@@ -41,7 +41,7 @@ struct StringPartCmp
 {
 	bool operator()(const SStringPart& lhs, const SStringPart& rhs) const
 	{
-		const int cmp_res = _strcmpi(lhs.string_value.c_str(), rhs.string_value.c_str());
+		const int cmp_res = strcmpi(lhs.string_value.c_str(), rhs.string_value.c_str());
 		if (cmp_res == 0)
 			return lhs.length < rhs.length;
 		return cmp_res < 0;
@@ -121,7 +121,7 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 		{
 			const string sunstring = formation.substr(i, formation.size() - i);
 			const int child_res = find_max_length_train2(pattern, change_count, max_select, sunstring);
-			if (max_select && child_res < max_value || !max_select && child_res > max_value)
+			if ((max_select && (child_res < max_value)) || (!max_select && (child_res > max_value)))
 			{
 				max_value = child_res;
 				if (max_value == 1 && i < max_str_len - 1) //меньше 1 только 0, а он только если вся строка подойдет
