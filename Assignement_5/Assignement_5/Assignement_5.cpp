@@ -213,6 +213,9 @@ int main()
 		return 1;
 	}
 
+	if (change_count > 1)
+		return 1;
+
 	//test(pattern);
 
 	const int max_length_train = find_max_length_train2(pattern, change_count, true, formation);
