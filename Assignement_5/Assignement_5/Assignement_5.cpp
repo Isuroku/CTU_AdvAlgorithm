@@ -122,7 +122,7 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 	const size_t pattern_len = pattern.length();
 	const size_t min_str_len = pattern_len - change_count;
 
-	snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d", min_str_len);
+	snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d, pattern_len %d, change_count %d", min_str_len, pattern_len, change_count);
 	DebugLog(_str_buf);
 
 	if (formation.size() < min_str_len)
