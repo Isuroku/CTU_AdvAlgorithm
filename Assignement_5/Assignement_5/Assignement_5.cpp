@@ -196,11 +196,15 @@ int main()
 	IOSwitcher.getline(formation);
 	formation = trim(formation);
 	cerr << formation << endl;
+	for(size_t i = 0; i < formation.size(); ++i)
+		cerr << std::hex << (int)formation[i] << endl;
 
 	string pattern;
 	IOSwitcher.getline(pattern);
 	pattern = trim(pattern);
 	cerr << pattern << endl;
+	for (size_t i = 0; i < pattern.size(); ++i)
+		cerr << std::hex << (int)pattern[i] << endl;
 
 	string s_change_count;
 	IOSwitcher.getline(s_change_count);
