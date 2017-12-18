@@ -184,10 +184,12 @@ int main()
 
 	string formation;
 	IOSwitcher.getline(formation);
+	formation.erase(remove(formation.begin(), formation.end(), ' '));
 	cerr << formation;
 
 	string pattern;
 	IOSwitcher.getline(pattern);
+	pattern.erase(remove(pattern.begin(), pattern.end(), ' '));
 	cerr << pattern;
 
 	string s_change_count;
