@@ -172,7 +172,7 @@ int find_min_length_train2(const string& pattern, const int change_count, const 
 int main()
 {
 	string fn = "";
-	const int test_n = 1;
+	const int test_n = -1;
 	const bool from_file = test_n >= 0 && test_n < static_cast<int>(arr_file_names->length());
 	if (from_file)
 		fn = arr_file_names[test_n];
