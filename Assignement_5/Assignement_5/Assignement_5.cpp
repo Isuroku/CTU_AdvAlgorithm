@@ -53,8 +53,8 @@ vector<vector<size_t>> _matrix;
 int levenshtein_distance(const string& src, const string& dst, const size_t dst_len)
 {
 	const SStringPart part(dst, dst_len);
-	if (_cache_dist.find(part) != _cache_dist.end())
-		return _cache_dist[part];
+	//if (_cache_dist.find(part) != _cache_dist.end())
+	//	return _cache_dist[part];
 
 	const size_t m = src.size();
 	const size_t n = min(dst_len, dst.size());
@@ -172,7 +172,7 @@ int find_min_length_train2(const string& pattern, const int change_count, const 
 int main()
 {
 	string fn = "";
-	const int test_n = -1;
+	const int test_n = 0;
 	const bool from_file = test_n >= 0 && test_n < static_cast<int>(arr_file_names->length());
 	if (from_file)
 		fn = arr_file_names[test_n];
