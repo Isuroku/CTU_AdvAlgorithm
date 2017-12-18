@@ -28,7 +28,7 @@ size_t str_len(const string& pattern)
 {
 	if (pattern.empty())
 		return 0;
-	return pattern.size() - 1;
+	return pattern.size();
 }
 
 struct SStringPart
@@ -184,9 +184,11 @@ int main()
 
 	string formation;
 	IOSwitcher.getline(formation);
+	cerr << formation;
 
 	string pattern;
 	IOSwitcher.getline(pattern);
+	cerr << pattern;
 
 	string s_change_count;
 	IOSwitcher.getline(s_change_count);
