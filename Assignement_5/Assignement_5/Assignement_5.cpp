@@ -24,8 +24,38 @@ const string arr_file_names[] =
 	"Pd/pub12.in", //152 209
 };
 
+struct SStringPart
+{
+public:
+	string string_value;
+	size_t length;
+
+	SStringPart(const string& dst, const size_t dst_len)
+	{
+		string_value = dst;
+		length = dst_len;
+	}
+};
+
+struct StringPartCmp
+{
+	bool operator()(const SStringPart& lhs, const SStringPart& rhs) const
+	{
+		const int cmp_res = _strcmpi(lhs.string_value.c_str(), rhs.string_value.c_str());
+		if (cmp_res == 0)
+			return lhs.length < rhs.length;
+		return cmp_res < 0;
+	}
+};
+
+map<SStringPart, int, StringPartCmp> _cache_dist;
+vector<vector<size_t>> _matrix;
 int levenshtein_distance(const string& src, const string& dst, const size_t dst_len)
 {
+	const SStringPart part(dst, dst_len);
+	if (_cache_dist.find(part) != _cache_dist.end())
+		return _cache_dist[part];
+
 	const size_t m = src.size();
 	const size_t n = min(dst_len, dst.size());
 	if (m == 0)
@@ -33,54 +63,70 @@ int levenshtein_distance(const string& src, const string& dst, const size_t dst_
 	if (n == 0)
 		return m;
 
-	vector<vector<size_t>> matrix(m + 1);
-
+	//vector<vector<size_t>> matrix(m + 1);
+	for (size_t i = 0; i < _matrix.size(); ++i)
+		_matrix[i].clear();
+	_matrix.clear();
+	
+	_matrix.resize(m + 1);
 	for (size_t i = 0; i <= m; ++i) 
 	{
-		matrix[i].resize(n + 1);
-		matrix[i][0] = i;
+		_matrix[i].resize(n + 1);
+		_matrix[i][0] = i;
 	}
 	for (size_t i = 0; i <= n; ++i)
-		matrix[0][i] = i;
-
-	size_t above_cell, left_cell, diagonal_cell, cost;
+		_matrix[0][i] = i;
 
 	for (size_t i = 1; i <= m; ++i) 
 	{
 		for (size_t j = 1; j <= n; ++j) 
 		{
-			cost = src[i - 1] == dst[j - 1] ? 0 : 1;
-			above_cell = matrix[i - 1][j];
-			left_cell = matrix[i][j - 1];
-			diagonal_cell = matrix[i - 1][j - 1];
-			matrix[i][j] = min(min(above_cell + 1, left_cell + 1), diagonal_cell + cost);
+			const size_t cost = src[i - 1] == dst[j - 1] ? 0 : 1;
+			const size_t above_cell = _matrix[i - 1][j];
+			const size_t left_cell = _matrix[i][j - 1];
+			const size_t diagonal_cell = _matrix[i - 1][j - 1];
+			_matrix[i][j] = min(min(above_cell + 1, left_cell + 1), diagonal_cell + cost);
 		}
 	}
 
-	return matrix[m][n];
+	const int res = _matrix[m][n];
+	_cache_dist[part] = res;
+	return res;
 }
 
 map<string, int> _cache;
 
-int find_max_length_train2(const string& pattern, const int change_count, const string& formation)
+int find_max_length_train2(const string& pattern, const int change_count, bool max_select, const string& formation)
 {
-	if (formation.size() == 0)
+	const size_t formation_len = formation.size();
+	if (formation_len == 0)
 		return 0;
-
-	if(_cache.count(formation) > 0)
+	if (_cache.find(formation) != _cache.end())
 		return _cache[formation];
 
-	int max_value = INT_MAX - 1;
+	int max_value = max_select ? INT_MAX - 1: INT_MIN + 1;
+	const size_t pattern_len = pattern.length();
+	const size_t min_str_len = pattern_len - change_count;
 
-	for(size_t i = 1; i <= formation.size(); ++i)
+	if (formation.size() < min_str_len)
+		return max_value;
+
+	size_t max_str_len = pattern_len + change_count;
+	max_str_len = min(max_str_len, formation_len);
+
+	for(size_t i = min_str_len; i <= max_str_len; ++i)
 	{
 		const int d = levenshtein_distance(pattern, formation, i);
-		if(d <= change_count)
+		if (d <= change_count)
 		{
 			const string sunstring = formation.substr(i, formation.size() - i);
-			const int child_res = find_max_length_train2(pattern, change_count, sunstring);
-			if (child_res < max_value)
+			const int child_res = find_max_length_train2(pattern, change_count, max_select, sunstring);
+			if (max_select && child_res < max_value || !max_select && child_res > max_value)
+			{
 				max_value = child_res;
+				if (max_value == 1 && i < max_str_len - 1) //меньше 1 только 0, а он только если вся строка подойдет
+					i = max_str_len - 1;
+			}
 		}
 	}
 
@@ -94,7 +140,7 @@ int find_min_length_train2(const string& pattern, const int change_count, const 
 	if (formation.size() == 0)
 		return 0;
 
-	if (_cache.count(formation) > 0)
+	if (_cache.find(formation) != _cache.end())
 		return _cache[formation];
 
 	int max_value = INT_MIN + 1;
@@ -126,7 +172,7 @@ int find_min_length_train2(const string& pattern, const int change_count, const 
 int main()
 {
 	string fn = "";
-	const int test_n = 8;
+	const int test_n = -1;
 	const bool from_file = test_n >= 0 && test_n < static_cast<int>(arr_file_names->length());
 	if (from_file)
 		fn = arr_file_names[test_n];
@@ -145,15 +191,15 @@ int main()
 	if (sscanf(s_change_count.c_str(), "%i", &change_count) != 1)
 	{
 		cerr << "read change_count was wrong";
-		return NULL;
+		return 1;
 	}
 
 	//test(pattern);
 
-	const int max_length_train = find_max_length_train2(pattern, change_count, formation);
+	const int max_length_train = find_max_length_train2(pattern, change_count, true, formation);
 
 	_cache.clear();
-	const int min_length_train = find_min_length_train2(pattern, change_count, formation);
+	const int min_length_train = find_max_length_train2(pattern, change_count, false, formation);
 
 	cout << max_length_train << " " << min_length_train;
 
