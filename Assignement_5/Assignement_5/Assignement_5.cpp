@@ -24,6 +24,13 @@ const string arr_file_names[] =
 	"Pd/pub12.in", //152 209
 };
 
+size_t str_len(const string& pattern)
+{
+	if (pattern.empty())
+		return 0;
+	return pattern.size();
+}
+
 struct SStringPart
 {
 public:
@@ -56,8 +63,8 @@ int levenshtein_distance(const string& src, const string& dst, const size_t dst_
 	//if (_cache_dist.find(part) != _cache_dist.end())
 	//	return _cache_dist[part];
 
-	const size_t m = src.size();
-	const size_t n = min(dst_len, dst.size());
+	const size_t m = str_len(src);
+	const size_t n = min(dst_len, str_len(dst));
 	if (m == 0)
 		return n;
 	if (n == 0)
@@ -112,20 +119,20 @@ void DebugLog(const string& pattern, const int change_count)
 int find_max_length_train2(const string& pattern, const int change_count, bool max_select, const string& formation)
 {
 	DebugLog(formation);
-	const size_t formation_len = formation.size();
+	const size_t formation_len = str_len(formation);
 	if (formation_len == 0)
 		return 0;
 	//if (_cache.find(formation) != _cache.end())
 		//return _cache[formation];
 
 	int max_value = max_select ? INT_MAX - 1: INT_MIN + 1;
-	const size_t pattern_len = pattern.size();
+	const size_t pattern_len = str_len(pattern);
 	const size_t min_str_len = pattern_len - change_count;
 
-	snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d, pattern_len %d, change_count %d", min_str_len, pattern_len, change_count);
+	snprintf(_str_buf, sizeof(_str_buf), "min_str_len: %d, pattern_len %d, change_count %d, formation_len %d", min_str_len, pattern_len, change_count, formation_len);
 	DebugLog(_str_buf);
 
-	if (formation.size() < min_str_len)
+	if (formation_len < min_str_len)
 		return max_value;
 
 	size_t max_str_len = pattern_len + change_count;
@@ -141,7 +148,7 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 		{
 			snprintf(_str_buf, sizeof(_str_buf), "levenshtein_distance: %d", d);
 			DebugLog(_str_buf);
-			const string sunstring = formation.substr(i, formation.size() - i);
+			const string sunstring = formation.substr(i, formation_len - i);
 			const int child_res = find_max_length_train2(pattern, change_count, max_select, sunstring);
 			if ((max_select && (child_res < max_value)) || (!max_select && (child_res > max_value)))
 			{
@@ -149,32 +156,6 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 				if (max_value == 1 && i < max_str_len - 1) //меньше 1 только 0, а он только если вся строка подойдет
 					i = max_str_len - 1;
 			}
-		}
-	}
-
-	const int res = max_value + 1;
-	_cache[formation] = res;
-	return res;
-}
-
-int find_min_length_train2(const string& pattern, const int change_count, const string& formation)
-{
-	if (formation.size() == 0)
-		return 0;
-
-	if (_cache.find(formation) != _cache.end())
-		return _cache[formation];
-
-	int max_value = INT_MIN + 1;
-	
-	for (size_t i = 1; i <= formation.size(); ++i)
-	{
-		const int d = levenshtein_distance(pattern, formation, i);
-		if (d <= change_count)
-		{
-			const int child_res = find_min_length_train2(pattern, change_count, formation.substr(i, formation.size() - i));
-			if (child_res > max_value)
-				max_value = child_res;
 		}
 	}
 
