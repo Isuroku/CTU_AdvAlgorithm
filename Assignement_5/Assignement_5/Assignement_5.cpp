@@ -172,6 +172,16 @@ int find_max_length_train2(const string& pattern, const int change_count, bool m
 //	int d = levenshtein_distance(pattern, t, t.size());
 //}
 
+string trim(const string& str)
+{
+	string s = str;
+	while(s[s.length() - 1] == ' ')
+	{
+		s = s.substr(0, s.length() - 1);
+	}
+	return s;
+}
+
 int main()
 {
 	string fn = "";
@@ -184,13 +194,13 @@ int main()
 
 	string formation;
 	IOSwitcher.getline(formation);
-	formation.erase(remove(formation.begin(), formation.end(), ' '));
-	cerr << formation;
+	formation = trim(formation);
+	cerr << formation << endl;
 
 	string pattern;
 	IOSwitcher.getline(pattern);
-	pattern.erase(remove(pattern.begin(), pattern.end(), ' '));
-	cerr << pattern;
+	pattern = trim(pattern);
+	cerr << pattern << endl;
 
 	string s_change_count;
 	IOSwitcher.getline(s_change_count);
